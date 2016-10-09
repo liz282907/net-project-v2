@@ -1,0 +1,32 @@
+$base-color: #3F3F3F;
+
+.header-wrapper{
+    height: 64px;
+    line-height: 64px;
+    width: 100%;
+    background-color: $base-color;
+    padding: 0 20px;
+
+    .logo,.nav{
+        float: left;
+    }
+    .logo{
+        font-size: 14px;
+    }
+
+    .header-right{
+        float: right;
+    }
+}
+
+h1{
+    display: inline-block;
+}
+.nav{
+    // display: inline-block;
+    .nav-item{
+        float: left;
+        padding: 0 20px;
+    }
+}
+
