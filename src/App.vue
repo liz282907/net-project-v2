@@ -1,4 +1,4 @@
-<style>
+<style lang="scss">
 @import './assets/styles/common/index.scss';
 @import './assets/styles/components/index.scss';
 

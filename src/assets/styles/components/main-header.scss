@@ -2,31 +2,53 @@ $base-color: #3F3F3F;
 
 .header-wrapper{
     height: 64px;
-    line-height: 64px;
+
     width: 100%;
     background-color: $base-color;
-    padding: 0 20px;
+    padding: 0 120px;
+    font-size: 14px;
 
     .logo,.nav{
         float: left;
     }
-    .logo{
-        font-size: 14px;
-    }
-
     .header-right{
         float: right;
+        display: inline-block;
     }
+    .nav,.header-right{
+      line-height: 64px;
+    }
+
 }
 
-h1{
+.logo{
     display: inline-block;
+    padding: 10px 50px;
+    box-sizing:border-box;
+    background-color: rgba(255,255,255,0.45);
+    border-radius: 5px;
+    color: #fff;
+    vertical-align: middle;
+    margin-top: 12px;
 }
 .nav{
-    // display: inline-block;
     .nav-item{
         float: left;
         padding: 0 20px;
+        a{
+          color: rgba(255,255,255,0.45);
+          font: 14px "Microsoft Yahei";
+        }
+        .router-link-active{
+          color: #fff;
+        }
     }
+}
+
+.user-photo{
+  &:before{
+    position: absolute;
+    content: attr
+  }
 }
 
