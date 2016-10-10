@@ -1,6 +1,6 @@
 <template>
 
-    <h3>evolve-analysis</h3>
+    <h3>{{id}}</h3>
 
 </template>
 
@@ -8,9 +8,10 @@
 
 
 export default {
-  components: {
-    Hello,
-  },
+	props:["id"],
+	components: {
+
+	},
 };
 </script>
 

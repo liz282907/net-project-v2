@@ -1,7 +1,11 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-  </div>
+	<div class="hello">
+		<footer class="footer">
+			<p><a href="#">联系我们</a> | <a href="#">帮助中心</a></p>
+			<p>中共中央网络和信息化领导小组办公室 & 中华人民共和国国家互联网信息办公室 版权所有</p>
+			<p>承建：中国科学院信息与工程研究所 2016.10</p>
+		</footer>
+	</div>
 </template>
 
 <script>
@@ -9,7 +13,7 @@ export default {
 
   data() {
     return {
-      msg: 'Hello Vue!',
+
     };
   },
 };
@@ -17,7 +21,12 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h1 {
-  color: #42b983;
+.footer{
+	background:#F7F7F7;
+	padding:50px 0 50px 0;
+	font-size:0.8rem;
+	font-family:"黑体";
+	margin-top:30px;
+	text-align:center;
 }
 </style>
