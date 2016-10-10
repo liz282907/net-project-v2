@@ -1,0 +1,29 @@
+span{
+    font-size: 14px;
+}
+.manage-container{
+    .el-input{
+        width: 80px;
+    }
+}
+
+
+.manage-container{
+    display: flex;
+    flex-direction: column;
+    // .breadcrumb-part{
+    //     height:
+    // }
+}
+.form-part{
+    margin-top: 30px;
+    background-color: $white;
+    .iconfont{
+        font-size: 14px;
+    }
+    .bread-crumb{
+        padding: 20px 10px;
+        vertical-align: middle;
+        line-height: 36px;
+    }
+}

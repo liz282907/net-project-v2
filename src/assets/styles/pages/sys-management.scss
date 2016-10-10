@@ -1,0 +1,15 @@
+.sys-container{
+    display: flex;
+    margin-left: -120px;
+
+}
+.sys-aside{
+    // margin-left: -120px;
+    width: 120px;
+    a{
+        color: #c0ccda;
+    }
+}
+.sys-main{
+    flex: 1;
+}

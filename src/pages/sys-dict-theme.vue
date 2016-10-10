@@ -1,6 +1,6 @@
 <template>
 
-     <h3>分类</h3>
+     <h3>主题</h3>
 
 </template>
 

@@ -22,8 +22,8 @@ const evolveRoute = {
   name: '关键词演化',
   component: require('./pages/evolve.vue'),
   children: [
-	  { path: '/export', name: '导出系统', component: './pages/evolve-export.vue' },
-	  { path: '/analysis', name: '命中统计', component: './pages/evolve-analysis.vue' },
+	  { path: '/export', name: '导出系统', component: require('./pages/evolve-export.vue') },
+	  { path: '/analysis', name: '命中统计', component: require('./pages/evolve-analysis.vue') },
   ],
 };
 
@@ -32,19 +32,25 @@ const sysManageRoute = {
     name: '系统管理',
     component: require('./pages/sys-management.vue'),
     children: [
-    	{ path: '/account', name: '账户管理', component: './pages/sys-account.vue' },
-    	{ path: '/dict', name: '字典管理', component: './pages/sys-dict.vue' },
-    	{ path: '/system', name: '分发系统', component: './pages/sys-distribute.vue' },
+    	{ path: '/account', name: '账户管理', component: require('./pages/sys-account.vue') },
+    	// { path: '/dict', name: '字典管理', component: require('./pages/sys-dict.vue') },
+      { path: '/dict-theme', name: '字典管理-主题', component: require('./pages/sys-dict-theme.vue') },
+      { path: '/dict-category', name: '字典管理-分类', component: require('./pages/sys-dict-category.vue') },
+    	{ path: '/system', name: '分发系统', component: require('./pages/sys-distribute.vue') },
       ],
 };
 
 const totalRoute = { route };
+const redirectRoute = [
+    {path: '*', redirect: '/management'},
+    // {path: '/sys-management', redirect: '/sys-management/account'},
+    // {path: '/evolve', redirect: '/evolve/export'}
+];
 
-totalRoute.route = totalRoute.route.concat([evolveRoute, sysManageRoute]);
+totalRoute.route = [...totalRoute.route,...redirectRoute,evolveRoute, sysManageRoute];
+
 
 // homePage
-totalRoute.route.push({
-    path: '*', redirect: '/management',
-});
+totalRoute.route.push({path: '*', redirect: '/management'});
 
 export default totalRoute.route;
