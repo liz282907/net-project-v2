@@ -38,6 +38,7 @@
                 </section>
             </div>
        </div>
+       <div class="table-part"></div>
 
    </div>
 
