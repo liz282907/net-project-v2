@@ -2,6 +2,7 @@ var path = require('path')
 var express = require('express')
 var webpack = require('webpack')
 var config = require('../config')
+var fs = require('fs')
 var opn = require('opn')
 var proxyMiddleware = require('http-proxy-middleware')
 var webpackConfig = process.env.NODE_ENV === 'testing'
@@ -56,6 +57,17 @@ app.use(hotMiddleware)
 // serve pure static assets
 var staticPath = path.posix.join(config.dev.assetsPublicPath, config.dev.assetsSubDirectory)
 app.use(staticPath, express.static('./static'))
+
+
+app.get("/management/category",function(req,res){
+  var data = JSON.parse(fs.readFileSync('./mock/category.json'));
+  res.json(data);
+});
+
+app.get("/management/keywordList",function(req,res){
+  var data = JSON.parse(fs.readFileSync('./mock/keywordList.json'));
+  res.json(data);
+});
 
 module.exports = app.listen(port, function (err) {
   if (err) {

@@ -1,13 +1,13 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-// import VueResource from 'vue-resource';
+import VueResource from 'vue-resource';
 
 import configRouter from './route.config';
 
 
 import App from './App';
 import Element from 'element-ui'
-import 'element-ui/lib/theme-default/index.css';
+// import 'element-ui/lib/theme-default/index.css';
 // import {
 //     Breadcrumb,BreadcrumbItem,
 //     Input,
@@ -24,7 +24,7 @@ import 'element-ui/lib/theme-default/index.css';
 
 Vue.use(VueRouter);
 Vue.use(Element);
-// Vue.use(VueResource);
+Vue.use(VueResource);
 
 const router = new VueRouter({
   mode: 'hash', /* default */

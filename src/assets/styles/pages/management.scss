@@ -77,8 +77,32 @@ span{
 
 /*************table part start **********************/
 .table-part{
+    padding: 20px;
+    .table-actions,.buttongroup-wrapper{
+        display: flex;
+        align-items: center;
+    }
+    .table-actions{
+        margin: 20px;
+        margin-left: 0;
+        .mycheckbox{
+            margin-left: 20px;
+        }
+    }
+    .pagination-wrapper{
+        float: right;
+        margin-top: 30px;
 
+    }
+    .buttongroup-wrapper{
+        margin-left: -20px;
+    }
+    .el-button-group{
+        margin-left: 20px;
+        display: inline-block;
+    }
 }
+
 
 
 /**************table part end ***********************/

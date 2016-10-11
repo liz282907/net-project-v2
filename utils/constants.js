@@ -6,4 +6,10 @@ const navList = [
     { url: '/sys-management', zh_name: '系统管理' },
 ];
 
-export default navList ;
+const serverPath = '';
+const urls = {
+    'category': serverPath + '/management/category',
+    'keywordList': serverPath + '/management/keywordList'
+}
+
+export { navList, urls };

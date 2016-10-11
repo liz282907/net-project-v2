@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import navList from '../../../utils/constants';
+import { navList } from '../../../utils/constants';
 
 
 export default {
