@@ -139,6 +139,8 @@ input{
 	width: 30px;
 	height: 30px;
 	cursor:pointer;
+	margin-left:auto;
+	margin-right:auto;
 }
 
 .ui-icon-del{
@@ -155,6 +157,70 @@ input{
 
 .ui-icon-add{
 	background-image: url("../assets/images/ui-icon-add.png");
+}
+
+.ui-icon-import{
+	background-image: url("../assets/images/icon-add.png");
+}
+
+/*tip*/
+.tip{
+	position:fixed;
+	width:400px;
+	height:200px;
+	margin:auto;
+	top:0;
+	bottom:0;
+	left:0;
+	right:0;
+	background:white;
+	border:1px solid black;
+	border-radius:20px;
+	
+	padding:20px;
+	overflow:auto;
+}
+
+.tip-bg{
+	position:fixed;
+	width:100%;
+	height:100%;
+	margin:auto;
+	top:0;
+	bottom:0;
+	left:0;
+	right:0;
+	background:gray;
+	opacity:0.9;
+}
+
+.tip-button{
+	display:inline;
+	border:1px solid gray;
+	border-radius:5px;
+	
+	padding-left:20px;
+	padding-right:20px;
+	
+	height:30px;
+	line-height:30px;
+	
+	font-family:"微软雅黑";
+	
+	cursor:pointer;
+	float:right;
+}
+
+.tip-button:hover{
+	background:steelblue;
+}
+
+input[type=checkbox]{
+	width:20px;
+	height:20px;
+	
+	vertical-align:middle;
+	-webkit-appearance: checkbox;
 }
 
 .left{

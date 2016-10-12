@@ -5,6 +5,7 @@
 			<div v-for="title in titleList" class="title-container">
 				<div @click="title_click(title)" class="title-div pointer">
 					{{title.name}}
+					<div @click.stop.prevent="add_topic(title)" style="float:right;padding-right:10px;">+</div>
 				</div>
 				<div @click="topic_click(topic,titleList)" v-for="topic in title.children" v-show="title.showflag" class="topic-div pointer" :class="{'topic-current':topic.isCurrent}">
 					{{topic.name}}
@@ -88,10 +89,73 @@ export default {
 						"id":"8"
 					}
 				]
+			},
+			{
+				"name":"主题3",
+				"children":[
+					{
+						"name":"专题1",
+						"id":"5"
+					},
+					{
+						"name":"专题2",
+						"id":"6"
+					},
+					{
+						"name":"专题3",
+						"id":"7"
+					},
+					{
+						"name":"专题4",
+						"id":"8"
+					}
+				]
+			},
+			{
+				"name":"主题4",
+				"children":[
+					{
+						"name":"专题1",
+						"id":"5"
+					},
+					{
+						"name":"专题2",
+						"id":"6"
+					},
+					{
+						"name":"专题3",
+						"id":"7"
+					},
+					{
+						"name":"专题4",
+						"id":"8"
+					}
+				]
+			},
+			{
+				"name":"主题5",
+				"children":[
+					{
+						"name":"专题1",
+						"id":"5"
+					},
+					{
+						"name":"专题2",
+						"id":"6"
+					},
+					{
+						"name":"专题3",
+						"id":"7"
+					},
+					{
+						"name":"专题4",
+						"id":"8"
+					}
+				]
 			}
 		];
 		for(var key in temp){
-			temp[key].showflag = true;
+			temp[key].showflag = false;
 			for(var topic in temp[key].children){
 				temp[key].children[topic].isCurrent = false;
 			}
@@ -109,6 +173,13 @@ export default {
 	methods:{
 		title_click:function(title){
 			title.showflag = !title.showflag;
+		},
+		add_topic:function(title){
+			alert(title.name);
+			this.tabList[0].isCurrent = true;
+			this.tabList[1].isCurrent = false;
+			
+			this.topicCurrent = "";
 		},
 		tab_click:function(tab,tabList){
 			for(var key in tabList){
@@ -220,6 +291,7 @@ export default {
 .right-content{
 	width:100%;
 	flex:1;
+	overflow:auto;
 }
 
 .left{

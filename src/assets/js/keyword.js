@@ -5,17 +5,15 @@ var keyword = function(option){
 	var _id = option.id || "";
 	var _rowNum = 0;
 	var _row = [];
+	var _system = option.export_system || ["九宫格","计算所"];
+	var choseSystem = "";
 	
 	(function _init(){
 		var c = $("#"+_container);
 		c.empty();
 		var divList = [];
 		divList.push($("<div class='filter-div'>专题词名称：<input id='keyword_name'></input></div>"));
-/*		divList.push($("<div class='filter-div'>监控周期：<input id='keyword_start_time' type='datetime-local'></input> ~ <input id='keyword_end_time' type='datetime-local'></input></div>"));
-		divList.push($("<div class='filter-div'>预警级别：<input id='keyword_level' name='level' type='radio' checked='checked'>紧急 </input><input id='keyword_level' name='level' type='radio'>重要 </input><input id='keyword_level' name='level' type='radio'>一般 </input></div>"));
-		divList.push($("<div class='filter-div'><span class='left'>组内共享： </span>   <div id='button_share1' class='open1'><div id='button_share2' class='open2'></div></div></div>"));
-		divList.push($("<div class='filter-div'><span class='left'>预警方式：  数字提醒： </span><div id='button_tip11' class='open1'><div id='button_tip12' class='open2'></div></div><span class='left'>自动弹窗： </span><div id='button_tip21' class='open1'><div id='button_tip22' class='open2'></div></div><span class='left'>铃声：</span><div id='button_tip31' class='open1'><div id='button_tip32' class='open2'></div></div></div>"));
-*/		divList.push($("<div class='filter-div'>关键词匹配：<button id='import_button' class='keyword-button'>导入关键词</button><!--button id='import_add_button' class='keyword-button'>导入追加关键词</button><button id='import_replace_button' class='keyword-button'>导入替换关键词</button--></div>"));
+		divList.push($("<div class='filter-div'>配置导出系统：<button id='config_button' class='keyword-button'>配置导出系统</button><span id='show_sys'></span></div>"));
 		
 		for(var i=0;i<divList.length;i++){
 			$("#"+_container).append(divList[i]);
@@ -30,15 +28,13 @@ var keyword = function(option){
 		}
 		_row.push( new keywordTable(o) );
 		
-		c.append("<div style='margin-top:10px;padding-left:10px'><button id='add_button' class='keyword-button'>添加</button><!--button id='toFan_button' class='keyword-button'>简转繁</button--><button id='save_button' class='keyword-button'>保存</button><button id='export_button' class='keyword-button'>导出</button></div>");
+		c.append("<div style='margin-top:10px;padding-left:10px'><button id='add_button' class='keyword-button'>添加规则</button><button id='save_button' class='keyword-button'>保存规则</button><button id='export_button' class='keyword-button' style='float:right'>导出到文件</button><button id='export_system_button' class='keyword-button' style='float:right'>导出到系统</button></div>");
 		
 		$("#add_button").on("click",addRow);
-		$("#toFan_button").on("click",toFan);
 		$("#save_button").on("click",save);
 		$("#export_button").on("click",export_keyword);
-		$("#import_button").on("click",import_keyword);
-		$("#import_add_button").on("click",import_add_keyword);
-		$("#import_replace_button").on("click",import_replace_keyword);
+		$("#config_button").on("click",config_keyword);
+		$("#export_system_button").on("click",export_system_keyword);
 		
 		if(_id != ""){
 			load_data();
@@ -47,7 +43,7 @@ var keyword = function(option){
 	
 	function load_data(){
 		$.ajax({
-			url:"data/daoru.json",
+			url:"/static/data/daoru.json",
 			type:"get",
 			data:{
 				id:_id
@@ -68,32 +64,41 @@ var keyword = function(option){
 		});
 	}
 	
-	function import_keyword(){
-		$.ajax({
-			url:"data/diwei.json",
-			type:"get",
-			data:{
-				pageSize:10,
-				pageIndex:1,
-				category:"low danger",
-				orderBy: "freq", 
-				desc: true,
-			},
-			success:function(d){
-				_row[_row.length-1].updataData(d.wordList);
-			},
-			error:function(){
-				alert("导入数据错误");
+	function config_keyword(){
+		choseSystem = "";
+			
+		var bg = $("<div class='tip-bg'></div>");
+		var tip = $("<div class='tip'><div id='button_cancle' class='tip-button'>取消</div><div id='button_ok' class='tip-button'>确定</div></div>");
+		
+		var sysList = [];
+		for(var i=0;i<_system.length;i++){
+			sysList.push($("<input type='checkbox' name='chose_mode' value='"+_system[i]+"'>"+_system[i]+"</input></br>"))
+			tip.append(sysList[i]);
+		}
+		
+		bg.append(tip);
+		$("body").append(bg);
+		
+		$("#button_cancle").on("click",function(){
+			bg.remove();
+		});
+		$("#button_ok").on("click",function(){
+			for(var i=0;i<sysList.length;i++){
+				if(sysList[i].is(':checked')){
+					choseSystem = choseSystem + sysList[i].val() + " ";
+				};
 			}
+			$("#show_sys").text("（已选系统："+ choseSystem+"）");
+			bg.remove();
 		});
 	}
 	
-	function import_add_keyword(){
-
-	}
-	
-	function import_replace_keyword(){
-
+	function export_system_keyword(){
+		if(choseSystem == "")
+			alert("请配置下发系统");
+		else{
+			
+		}
 	}
 	
 	function addRow(){
@@ -272,6 +277,7 @@ var keyword = function(option){
 		container_div.addClass("keyword-input-container");
 		
 		var textareaList = [];
+		var textareaAddList = [];
 		var textareaDelList = [];
 		var textareaTurnList = [];
 		
@@ -279,6 +285,7 @@ var keyword = function(option){
 		textareaList.push( $("<textarea class='keyword-textarea' placeholder='请输入关键词'></textarea>") );
 		textareaDelList.push( $("<div class='ui-icon ui-icon-dels'></div>") );
 		textareaTurnList.push( $("<div class='ui-icon ui-icon-turn'></div>") );
+		textareaAddList.push( $("<div class='ui-icon ui-icon-import'></div>") );
 		
 		var addButton = $("<span class='keyword-input-button ui-icon ui-icon-add' style='margin-top:10px;'></span>");
 		addButton.on("click",function(){addTextarea();});
@@ -287,11 +294,13 @@ var keyword = function(option){
 		container_div.prepend(d);
 		for(var i=0;i<textareaList.length;i++){
 			d.append(textareaList[i]);
+			d.append(textareaAddList[i]);
 			d.append(textareaTurnList[i]);
 			d.append(textareaDelList[i]);
 			
 			textareaTurnList[i].on("click",function(){turn(this);});
 			textareaDelList[i].on("click",function(){del(this);});
+			textareaAddList[i].on("click",function(){add(this);});
 		}	
 		
 		function addTextarea(){
@@ -303,13 +312,17 @@ var keyword = function(option){
 				var temp = $("<textarea class='keyword-textarea' placeholder='请输入关键词'></textarea>");
 				var tempDel = $("<div class='ui-icon ui-icon-dels'></div>");
 				var tempTurn = $("<div class='ui-icon ui-icon-turn'></div>");
+				var tempAdd = $("<div class='ui-icon ui-icon-import'></div>");
 				tempDel.on("click",function(){del(this);});
 				tempTurn.on("click",function(){turn(this);});
+				tempAdd.on("click",function(){add(this);});
 				
 				textareaList.push(temp);
 				textareaDelList.push(tempDel);
 				textareaTurnList.push(tempTurn);
+				textareaAddList.push(tempAdd);
 				d.append(temp);
+				d.append(tempAdd);
 				d.append(tempTurn);
 				d.append(tempDel);	
 								
@@ -334,22 +347,78 @@ var keyword = function(option){
 		function turn(el){
 			for(var i = 0;i<textareaList.length;i++){
 				if(textareaTurnList[i][0] === el){
-					$.ajax({
-						url:"data/yansheng.json",
-						type:"post",
-						data:{
-							keyword:textareaList[i].val()
-						},
-						success:function(d){
-							textareaList[i].val(d);
-						},
-						error:function(){
-							alert("生成衍生词错误");
-						}
-					});
+					var mode = new chose_mode(["衍生方法1","衍生方法2","衍生方法3"],textareaList[i].val(),textareaList[i]);
 					break;
 				}
 			}
+		}
+		
+		function add(el){
+			for(var i = 0;i<textareaList.length;i++){
+				if(textareaAddList[i][0] === el){
+					$.ajax({
+						url:"/static/data/diwei.json",
+						type:"get",
+						data:{
+							pageSize:10,
+							pageIndex:1,
+							category:"low danger",
+							orderBy: "freq", 
+							desc: true,
+						},
+						success:function(d){
+							textareaList[i].val(textareaList[i].val()+d.wordList.join(" ")+" ");
+						},
+						error:function(){
+							alert("导入数据错误");
+						}
+					});
+					break;
+				}				
+			}
+		}
+		
+		function chose_mode(mode,oldKeyword,textareaChanged){
+			var choseMode = "";
+			
+			var bg = $("<div class='tip-bg'></div>");
+			var tip = $("<div class='tip'><div id='button_cancle' class='tip-button'>取消</div><div id='button_ok' class='tip-button'>确定</div></div>");
+			
+			var modeList = [];
+			for(var i=0;i<mode.length;i++){
+				modeList.push($("<input type='checkbox' name='chose_mode' value='"+mode[i]+"'>"+mode[i]+"</input></br>"))
+				tip.append(modeList[i]);
+			}
+			
+			bg.append(tip);
+			$("body").append(bg);
+			
+			$("#button_cancle").on("click",function(){
+				bg.remove();
+			});
+			$("#button_ok").on("click",function(){
+				for(var i=0;i<modeList.length;i++){
+					if(modeList[i].is(':checked')){
+						choseMode = choseMode + modeList[i].val() + " ";
+					};
+				}
+				bg.remove();
+				
+				$.ajax({
+					url:"/static/data/yansheng.json",
+					type:"get",
+					data:{
+						mode:choseMode,
+						keyword:oldKeyword
+					},
+					success:function(d){
+						textareaChanged.val(d);
+					},
+					error:function(){
+						alert("生成衍生词错误");
+					}
+				});
+			});
 		}
 		
 		this.total = function(){
@@ -402,34 +471,5 @@ function traditionalized(cc){
     }
     return str;
 }
-/*
-window.onload=function(){
-	var div2=document.getElementById("button_share2");
-	var div1=document.getElementById("button_share1");
-	div1.onclick=function(){
-	  div1.className=(div1.className=="close1")?"open1":"close1";
-	  div2.className=(div2.className=="close2")?"open2":"close2";
-	}
-	
-	var div4=document.getElementById("button_tip12");
-	var div3=document.getElementById("button_tip11");
-	div3.onclick=function(){
-	  div3.className=(div3.className=="close1")?"open1":"close1";
-	  div4.className=(div4.className=="close2")?"open2":"close2";
-	}
-	var div6=document.getElementById("button_tip22");
-	var div5=document.getElementById("button_tip21");
-	div5.onclick=function(){
-	  div5.className=(div5.className=="close1")?"open1":"close1";
-	  div6.className=(div6.className=="close2")?"open2":"close2";
-	}
-	
-	var div8=document.getElementById("button_tip32");
-	var div7=document.getElementById("button_tip31");
-	div7.onclick=function(){
-	  div7.className=(div7.className=="close1")?"open1":"close1";
-	  div8.className=(div8.className=="close2")?"open2":"close2";
-	}	
-}*/
 
 export {keyword};
