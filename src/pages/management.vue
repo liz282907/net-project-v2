@@ -65,22 +65,14 @@
                 <el-table-column type="selection" width="50"></el-table-column>
                 <el-table-column inline-template label="关键词" width="120">
                     <div>
-                        <div v-if="isEditing"><input type="text" :value="row.newKeyword" /></div>
+                        <div v-if="isEditingArr[$index]"><input type="text" :value="row.newKeyword" /></div>
                         <div v-else>{{ row.keyword }}</div>
                     </div>
 
                 </el-table-column>
                 <el-table-column property="inputTime" label="录入时间" sortable></el-table-column>
                 <el-table-column property="auditTime" label="审核时间" show-tooltip-when-overflow sortable></el-table-column>
-                <el-table-column inline-template label="来源" >
-                    <div>
-                        <div v-show="isEditing">
-
-                        </div>
-                        <div v-show="!isEditing">{{ row.source }}</div>
-                    </div>
-
-                </el-table-column>
+                <el-table-column property="source" label="来源" ></el-table-column>
                 <el-table-column  inline-template label="分类" show-tooltip-when-overflow>
                     <ul>
                         <el-tag v-for="item in row.category" class="inner-tag">{{item}}</el-tag>
@@ -89,23 +81,33 @@
                 <el-table-column  label="状态" property="state.zh_name" width="100"></el-table-column>
                 <el-table-column inline-template label="操作">
                     <div>
-                        <div v-if="isAdmin && row.state.id===2" class="buttongroup-wrapper">
-                            <el-button-group class="action-group">
-                              <el-button type="primary" icon="edit" size="mini"></el-button>
-                              <el-button type="primary" icon="delete" size="mini" @click.native="deleteKeyword($index)"></el-button>
-                            </el-button-group>
-                            <el-button-group class="action-group">
-                              <el-button type="primary" icon="circle-check" size="mini" @click.native="audit(row,3,$index)">通过</el-button>
-                              <el-button type="primary" icon="circle-close" size="mini" @click.native="audit(row,4,$index)">拒绝</el-button>
+                        <div v-show="!isEditingArr[$index]">
+                            <div v-if="isAdmin && row.state.id===2" class="buttongroup-wrapper">
+                                <el-button-group class="action-group">
+                                  <el-button type="primary" icon="edit" @click.native="editKeyword($index)" size="mini"></el-button>
+                                  <el-button type="primary" icon="delete" size="mini" @click.native="deleteKeyword($index)"></el-button>
+                                </el-button-group>
+                                <el-button-group class="action-group">
+                                  <el-button type="primary" icon="circle-check" size="mini" @click.native="audit(row,3,$index)">通过</el-button>
+                                  <el-button type="primary" icon="circle-close" size="mini" @click.native="audit(row,4,$index)">拒绝</el-button>
+                                </el-button-group>
+                            </div>
+                            <div v-if="!isAdmin && row.state.id===2" class="buttongroup-wrapper">
+                                <el-button-group>
+                                  <el-button type="primary" icon="edit" size="mini"></el-button>
+                                  <el-button type="primary" icon="delete" size="mini"></el-button>
+                                </el-button-group>
+                            </div>
+                        </div>
+                        <div v-show="isEditingArr[$index]" class="buttongroup-wrapper">
+                            <el-button-group class="action-group ">
+                              <el-button type="primary" icon="circle-check" size="mini" @click.native="audit(row,3,$index)">更新</el-button>
+                              <el-button type="primary" icon="circle-close" size="mini" @click.native="audit(row,4,$index)">删除</el-button>
                             </el-button-group>
                         </div>
-                        <div v-if="!isAdmin && row.state.id===2" class="buttongroup-wrapper">
-                            <el-button-group>
-                              <el-button type="primary" icon="edit" size="mini"></el-button>
-                              <el-button type="primary" icon="delete" size="mini"></el-button>
-                            </el-button-group>
-                        </div>
+
                     </div>
+
 
                 </el-table-column>
 
@@ -160,13 +162,14 @@ export default {
         auditStates,
         keywordList ,
         isAdmin: true,
-        isEditing: false,
+        isEditingArr: [],
 
         curPage: 1,
         totalCount: 100,
         pageSize: 20,
 
         tableSelection:[],
+
     }
   },
 
@@ -242,6 +245,8 @@ export default {
         this.$http.get(urls.keywordList,{params: params}).then(response=>{
             this.fullscreenLoading = false;
             ({totalCount : this.totalCount,keywordList : this.keywordList} = response.body);
+            //维护keywordList是否在编辑状态
+            this.isEditingArr = new Array(this.keywordList.length).fill(false);
         }).catch(err=>{
             //web notification
 
@@ -330,6 +335,12 @@ export default {
             keyword: this.keywordList[index].keyword
         }).then(response=>this.showMessage("删除成功","success"),
                 err=>this.showMessage("删除失败","error"));
+    },
+
+    editKeyword(index){
+        // debugger;
+
+        this.$set(this.isEditingArr,index,true);
     }
   },
 
