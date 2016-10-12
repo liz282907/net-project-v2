@@ -14,6 +14,8 @@ var port = process.env.PORT || config.dev.port
 // https://github.com/chimurai/http-proxy-middleware
 var proxyTable = config.dev.proxyTable
 
+var fs = require("fs");
+
 var app = express()
 var compiler = webpack(webpackConfig)
 
@@ -56,6 +58,17 @@ app.use(hotMiddleware)
 // serve pure static assets
 var staticPath = path.posix.join(config.dev.assetsPublicPath, config.dev.assetsSubDirectory)
 app.use(staticPath, express.static('./static'))
+
+
+app.get("/sysmgr/account/query",function(req,res){
+    var accountList = JSON.parse(fs.readFileSync("./mock/account.json"));
+    res.json(accountList);
+});
+
+app.get("/sysmgr/distruibute/query", function(req,res){
+    var systemList = JSON.parse(fs.readFileSync("./mock/system.json"));
+    res.json(systemList);
+});
 
 module.exports = app.listen(port, function (err) {
   if (err) {
