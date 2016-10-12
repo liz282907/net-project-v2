@@ -10,6 +10,12 @@ const serverPath = '';
 const urls = {
     'category': serverPath + '/management/category',
     'keywordList': serverPath + '/management/keywordList'
-}
+};
+const auditStates = [
+    {zh_name: '全部', id: 1},
+    {zh_name: '未审核', id: 2},
+    {zh_name: '已审核', id: 3},
+    {zh_name: '未通过', id: 4}
+];
 
-export { navList, urls };
+export { navList, urls , auditStates};

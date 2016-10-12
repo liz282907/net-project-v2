@@ -54,15 +54,23 @@ span{
 .tag-expand{
     display: inline-block;
     .tag{
-        width: 120px;
+        // width: 120px;
         line-height: 20px;
-        margin: 8px 5px;
+        margin: 8px 40px;
+        padding: 0 10px;
+        box-sizing: border-box;
 
         float: left;
         display: inline-block;
         font-size: 12px;
         text-align: center;
+        cursor: pointer;
         // box-sizing: border-box;
+    }
+    .active{
+        background-color: $blue;
+        color: $white;
+
     }
 }
 .tag-more{

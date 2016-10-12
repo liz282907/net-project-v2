@@ -7,10 +7,10 @@
 
                 </el-breadcrumb-item>
                 <el-breadcrumb-item>
-                    <el-input placeholder="请输入内容" v-model.trim="searchInput" style="width: 300px;">
+                    <el-input placeholder="请输入内容" v-model.trim="searchInput" style="width: 300px;" @keyup.native.13="fetchKeywordList">
                         <el-select v-model="searchSelect" slot="prepend">
                             <el-option label="关键词" value="keyword"></el-option>
-                            <el-option label="分类" value="category"></el-option>
+                            <el-option label="来源" value="source"></el-option>
                         </el-select>
                     </el-input>
                 </el-breadcrumb-item>
@@ -20,7 +20,9 @@
 
                     <div class="tag-value">
                         <ul class="tag-expand clearfix">
-                            <li v-for="item in categories" :key="item" class="tag">{{item.zh_name}}</li>
+                            <li v-for="item in categories" :key="item" :class="[ 'tag', { active: item.id===filterCategory }]"
+                                @click="setFilter('filterCategory',item)">
+                            {{item.zh_name}}</li>
                         </ul> <span class="tag-more">展开<i class="iconfont arrow-closed"></i></span>
 
                     </div>
@@ -29,7 +31,11 @@
 
                     <div class="tag-value">
                         <ul class="tag-expand clearfix">
-                            <li v-for="item in auditStates" class="tag" :key="item">{{item}}</li>
+                            <li v-for="item in auditStates"
+                                :class="[ 'tag', { active: item.id===filterContent }]" :key="item"
+                                @click="setFilter('filterContent',item)">
+                                {{item.zh_name}}
+                            </li>
                         </ul> <span class="tag-more">展开<i class="iconfont arrow-closed"></i></span>
 
                     </div>
@@ -111,7 +117,19 @@
 
 <script>
 import keywordList from '../../utils/mock.js';
-import { urls } from '../../utils/constants.js';
+import { urls, auditStates } from '../../utils/constants.js';
+let timer;
+
+const defaultQueries = {
+        userid: 1,
+        pageSize:50,
+        pageIndex:1,
+        topic: "习近平",
+        filterContent: 1,
+        filterCategory: 1,
+        filterSelect: "keyword",
+        filterInput:""
+    }
 
 export default {
   components: {
@@ -124,9 +142,11 @@ export default {
         curTopic: "习近平",
         searchInput: '',
         searchSelect: '',
-        categories: [ "全部","出访","下基层","讲话","国际会议" ],
-        auditStates: [ "全部","未审核","已通过","未通过" ],
-        keywordList: keywordList,
+        filterCategory: 1,
+        filterContent: 1,
+        categories: [],
+        auditStates,
+        keywordList ,
         isAdmin: true,
         isEditing: false,
 
@@ -134,59 +154,64 @@ export default {
         totalCount: 100,
         pageSize: 20,
 
-        tableSelection:[]
-
+        tableSelection:[],
     }
   },
 
   computed: {
+        queryObj(){
+            return {
+                userid: 1,
+                pageSize: 50,
+                pageIndex: this.curPage,
+                topic: this.curTopic,
+                filterContent: this.filterContent,
+                filterCategory: this.filterCategory,
+                searchSelect: this.searchSelect,
+                searchInput: this.searchInput
+            }
 
+        }
+  },
+
+  watch: {
+    searchInput(newValue, oldValue){//即时搜索，监听搜索框变化，每隔500ms发送请求
+
+        clearTimeout(timer);
+        if(newValue.trim() !==oldValue.trim())
+            timer = setTimeout(this.fetchKeywordList,500);
+    }
   },
 
   mounted(){
 
     //showLoading
     this.fullscreenLoading = true;
-    const defaultQueries = {
-        userid: 1,        //要么？
-        pageSize:50,
-        pageIndex:1,
-        topic: "习近平",
-        filterContent: 1,
-        filterSelect: "keyword",
-        filterInput:""
-    }
+
     this.$http.get(urls.category).then(response=>{
         this.categories = response.body;
-        let params = Object.assign({},defaultQueries,{filterCategory: response.body[0].id});
-        return this.$http.get(urls.keywordList,params);
-    }).then(response=>{
-        this.fullscreenLoading = false;
-        this.totalCount = response.body.totalCount;
-        this.keywordList = response.body.keywordList;
-
-        // var o = {};
-        // ({x:o.x,y:o.x,z:o.z} = {x:2,y:4,z:5});
-        // console.log("=======",o);
-        ({totalCount : this.totalCount,keywordList : this.keywordList} = response.body);
-    }).catch(err=>{
-        //web notification
-        this.fullscreenLoading = false;
-        this.$message({
-          message: '获取关键词列表失败',
-          type: 'error'
-        });
+        this.fetchKeywordList({filterCategory: response.body[0].id});
     });
 
   },
 
   methods:{
+
+    /* 点击筛选条件的tag时设置active同时获取列表*/
+    setFilter(key,item){
+        this[key] = item.id;
+        this.fetchKeywordList();
+    },
+
     handleMultipleSelectionChange(val){
         this.tableSelection = val;
     },
-    handleCurrentChange(){
 
+    handleCurrentChange(){
+        //存储用户选项
+        this.fetchKeywordList();
     },
+    /* 反选 */
     chooseOtherKeywords(val){
         const selectedArr = this.$children.filter(child=>{
             return child.$el.className.indexOf("el-table")!==-1;
@@ -196,6 +221,24 @@ export default {
             item.$selected = !item.$selected;
         })
 
+    },
+
+    fetchKeywordList(updatedQuery ={}){
+
+        let params = Object.assign({},this.queryObj,updatedQuery);
+
+        this.$http.get(urls.keywordList,params).then(response=>{
+            this.fullscreenLoading = false;
+            ({totalCount : this.totalCount,keywordList : this.keywordList} = response.body);
+        }).catch(err=>{
+            //web notification
+
+            this.fullscreenLoading = false;
+            this.$message({
+              message: '获取关键词列表失败',
+              type: 'error'
+            });
+        });
     }
   },
 
