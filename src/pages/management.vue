@@ -43,19 +43,24 @@
             </div>
         </div>
         <div class="table-part clearfix">
+            <!-- 按钮组和多选反选 -->
             <div class="table-actions">
                 <!-- <el-checkbox class="checkbox mycheckbox" v-model="chooseAll">全选</el-checkbox> -->
                 <el-checkbox class="checkbox mycheckbox" @change='chooseOtherKeywords'>反选</el-checkbox>
                 <el-button-group class="action-group">
-                  <el-button  type="info"  size="small">通过</el-button>
-                  <el-button  type="danger" :plain="true" size="small">拒绝</el-button>
+                  <el-button  type="info"  size="small" :disabled="tableSelection.length<=0?true:false" @click.native="auditBatch(3)">选中通过
+                  </el-button>
+                  <el-button  type="danger" :plain="true" size="small" :disabled="tableSelection.length<=0?true:false"
+                    @click.native="auditBatch(4)">选中拒绝</el-button>
                 </el-button-group>
                 <el-button-group class="action-group">
-                  <el-button  type="info"  size="small">批量通过</el-button>
-                  <el-button   type="danger" :plain="true" size="small">批量拒绝</el-button>
+                  <el-button  type="info"  size="small" @click.native="auditAll(3)">全部通过</el-button>
+                  <el-button   type="danger" :plain="true" size="small" @click.native="auditAll(4)">全部拒绝</el-button>
                 </el-button-group>
 
             </div>
+
+            <!-- 列表 -->
             <el-table :data="keywordList" selection-mode="multiple" border stripe style="width: 100%" @selectionchange="handleMultipleSelectionChange">
                 <el-table-column type="selection" width="50"></el-table-column>
                 <el-table-column inline-template label="关键词" width="120">
@@ -76,20 +81,25 @@
                     </div>
 
                 </el-table-column>
-                <el-table-column property="state" label="状态" ></el-table-column>
+                <el-table-column  inline-template label="分类" show-tooltip-when-overflow>
+                    <ul>
+                        <el-tag v-for="item in row.category" class="inner-tag">{{item}}</el-tag>
+                    </ul>
+                </el-table-column>
+                <el-table-column  label="状态" property="state.zh_name" width="100"></el-table-column>
                 <el-table-column inline-template label="操作">
                     <div>
-                        <div v-if="isAdmin" class="buttongroup-wrapper">
+                        <div v-if="isAdmin && row.state.id===2" class="buttongroup-wrapper">
                             <el-button-group class="action-group">
                               <el-button type="primary" icon="edit" size="mini"></el-button>
-                              <el-button type="primary" icon="delete" size="mini"></el-button>
+                              <el-button type="primary" icon="delete" size="mini" @click.native="deleteKeyword($index)"></el-button>
                             </el-button-group>
                             <el-button-group class="action-group">
-                              <el-button type="primary" icon="circle-check" size="mini">通过</el-button>
-                              <el-button type="primary" icon="circle-close" size="mini">拒绝</el-button>
+                              <el-button type="primary" icon="circle-check" size="mini" @click.native="audit(row,3,$index)">通过</el-button>
+                              <el-button type="primary" icon="circle-close" size="mini" @click.native="audit(row,4,$index)">拒绝</el-button>
                             </el-button-group>
                         </div>
-                        <div v-else class="buttongroup-wrapper">
+                        <div v-if="!isAdmin && row.state.id===2" class="buttongroup-wrapper">
                             <el-button-group>
                               <el-button type="primary" icon="edit" size="mini"></el-button>
                               <el-button type="primary" icon="delete" size="mini"></el-button>
@@ -100,6 +110,8 @@
                 </el-table-column>
 
             </el-table>
+
+            <!-- 分页部分 -->
             <div class="pagination-wrapper">
                 <el-pagination
 
@@ -120,16 +132,16 @@ import keywordList from '../../utils/mock.js';
 import { urls, auditStates } from '../../utils/constants.js';
 let timer;
 
-const defaultQueries = {
-        userid: 1,
-        pageSize:50,
-        pageIndex:1,
-        topic: "习近平",
-        filterContent: 1,
-        filterCategory: 1,
-        filterSelect: "keyword",
-        filterInput:""
-    }
+// const defaultQueries = {
+//         userid: 1,
+//         pageSize:50,
+//         pageIndex:1,
+//         topic: "习近平",
+//         filterContent: 1,
+//         filterCategory: 1,
+//         filterSelect: "keyword",
+//         filterInput:""
+//     }
 
 export default {
   components: {
@@ -227,7 +239,7 @@ export default {
 
         let params = Object.assign({},this.queryObj,updatedQuery);
 
-        this.$http.get(urls.keywordList,params).then(response=>{
+        this.$http.get(urls.keywordList,{params: params}).then(response=>{
             this.fullscreenLoading = false;
             ({totalCount : this.totalCount,keywordList : this.keywordList} = response.body);
         }).catch(err=>{
@@ -239,6 +251,85 @@ export default {
               type: 'error'
             });
         });
+    },
+
+    sendAuditPost(postObj,cb){
+        this.$http.post(urls.audit,postObj).then(response=>{
+            this.showMessage("审核成功","success")
+        }).catch(err=>{
+            // this.$set(this.keywordList,index,prevRow);
+            if(cb) cb();
+            this.showMessage("审核失败","error")
+        })
+    },
+
+    /*用于发送请求后更改前端list上的值*/
+    updateTableRow(index,property,value){
+        const prevRow = this.keywordList[index];
+        let updatedState = { [property]: value };
+        const updatedRow = Object.assign({},this.keywordList[index],updatedState);
+        this.$set(this.keywordList,index,updatedRow);
+    },
+
+    audit(row,state,index){
+
+        //更新列表
+        this.updateTableRow(index,'state',auditStates.filter(stateObj=> stateObj.id===state)[0]);
+
+        const postObj = {
+            keywords: row.keyword,
+            state
+        }
+        this.sendAuditPost(postObj,function(){
+            this.$set(this.keywordList,index,prevRow);
+        });
+
+    },
+
+    /* 批量更改 */
+    auditBatch(state){
+
+        const prevKeywordList = this.keywordList;
+        const keywords = this.tableSelection.map(row=> row.keyword );
+
+        const postObj = {
+            keywords,
+            state
+        };
+
+        this.sendAuditPost(postObj,function(){
+            this.keywordList = prevKeywordList;
+        });
+        const updatedState = auditStates.filter(stateObj=> stateObj.id===state)[0];
+        this.keywordList.forEach((row,index)=>{
+            if(this.tableSelection.indexOf(row) && row.state.id===2)
+                this.updateTableRow(index,'state',updatedState);
+        });
+
+    },
+
+    /* 全部更改 */
+    auditAll(state){
+        this.sendAuditPost({state});
+
+        this.tableSelection = this.keywordList;
+        const updatedState = auditStates.filter(stateObj=> stateObj.id===state)[0];
+        this.keywordList.forEach((row,index)=>{
+            if(this.tableSelection.indexOf(row) && row.state.id===2)
+                this.updateTableRow(index,'state',updatedState);
+        });
+    },
+
+    showMessage(message,type){
+        this.$message({message,type});
+    },
+
+    deleteKeyword(index){
+        this.keywordList.splice(index,1);
+        this.$http.post(urls.delete,{
+            keyword: this.keywordList[index].keyword
+        }).then(response=>this.showMessage("删除成功","success"),
+                err=>this.showMessage("删除失败","error"));
     }
   },
 

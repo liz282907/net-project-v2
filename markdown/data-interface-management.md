@@ -40,8 +40,8 @@ params:{
     topic: "习近平"
     filterCategory:1,
     filterContent: 1,   //显示内容：全部|未审核|已通过|未通过
-    filterSelect: "keyword"|"source" 搜索的限定，关键词|来源
-    filterInput:"习近平"        
+    searchSelect: "keyword"|"source" 搜索的限定，关键词|来源
+    searchInput:"习近平"        
 }
 ```
 
@@ -56,14 +56,14 @@ params:{
         "inputTime": "2016-07-24 19:23",   //录入时间
         "auditTime": "2016-07-29 19:33",   //审核时间
         "source": "张三",                 
-        "state": "已通过"
+        "state": {"zh_name":"已通过","id":3}  //2：未审核，3：已通过，4：已拒绝
     },
     {
         "keyword": "习近平",
         "inputTime": "2016-07-24 19:23",
         "auditTime": "2016-07-29 19:33",
         "source": "张三",
-        "state": "已通过"
+        "state": {"zh_name":"已通过","id":3}  //2：未审核，3：已通过，4：已拒绝
     }
     ]
 
@@ -74,7 +74,30 @@ params:{
 
 ### 关键词的编辑、删除、审核
 
-### 关键词批量操作
+#### 审核request
+```
+url: yoursite.com/management/audit
+method: "post"
+params:{
+    userid: 1,        //要么？
+    keywords: "习近平"  | ["习近平","习大大"]
+    state: 3 (通过)| 4 (拒绝)
+}
+```
+
+单个词审核/批量通过,
+如果没有keywords这一项，表明全部通过/拒绝
+
+### 关键词删除
+```
+url: yoursite.com/management/delete
+method: "post"
+params:{
+    userid: 1,        //要么？
+    keyword: "习近平"
+}
+```
+
 
 词的增删改
 

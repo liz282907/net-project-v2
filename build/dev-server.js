@@ -69,6 +69,15 @@ app.get("/management/keywordList",function(req,res){
   res.json(data);
 });
 
+app.post("/management/audit",function(req,res){
+  var data = JSON.stringify({msg: "success"});
+  res.json(data);
+});
+app.post("/management/delete",function(req,res){
+  var data = JSON.stringify({msg: "success"});
+  res.json(data);
+});
+
 module.exports = app.listen(port, function (err) {
   if (err) {
     console.log(err)
