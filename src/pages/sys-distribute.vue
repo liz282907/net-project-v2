@@ -1,7 +1,7 @@
 <template>
 
     <div class="">
-        <el-card class="box-card">
+        <el-card class="box-card"  style="height: 800px;">
             <el-button type="primary" icon="plus" @click.native="userAdd" style="margin-bottom: 10px"></el-button>
             <el-table
                 :data="systemList"
@@ -126,7 +126,7 @@ export default {
                 pageIndex: this.pageIndex
             };
             let data = Object.assign({},defaultParams,params);
-            this.$http.get("/sysmgr/distruibute/query",
+            this.$http.get("/sysmgr/distribute/query",
                 {
                     params:data
                 })
@@ -166,7 +166,7 @@ export default {
                     message: '正在删除'
                 });
                 // 请求服务器
-                this.$http.post("/sysmgr/distruibute/delete",{
+                this.$http.post("/sysmgr/distribute/delete",{
                     ids: [id]
                 })
                 .then((response) => {
@@ -175,6 +175,7 @@ export default {
                         type: 'success',
                         message: '删除系统 '+ this.input_name + '成功!'
                     })
+                    this.fetchServerData()
                 }, (response) => {
 
                 })
@@ -226,6 +227,7 @@ export default {
                         type: 'success',
                         message: '添加系统 '+this.input_name+' 成功!'
                     })
+                    this.fetchServerData()
                 }, (response) => {
 
                 })
@@ -234,7 +236,7 @@ export default {
                     type: 'info',
                     message: '正在修改'
                 })
-                this.$http.post("/sysmgr/distruibute/save", {
+                this.$http.post("/sysmgr/distribute/save", {
                     id: this.id,
                     name: this.input_name,
                     url: this.input_url,
@@ -246,6 +248,7 @@ export default {
                         type: 'success',
                         message: '修改系统 '+this.input_name+' 信息成功!'
                     })
+                    this.fetchServerData()
                 }, (response) => {
 
                 })

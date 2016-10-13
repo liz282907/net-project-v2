@@ -1,6 +1,6 @@
 <template>
     <div class="">
-        <el-card class="box-card">
+        <el-card class="box-card" style="height: 800px;">
             <el-input
                 style="width: 300px; margin-bottom: 10px;"
                 placeholder="请输入用户名"
@@ -15,9 +15,9 @@
                 <el-radio :label="0">管理员</el-radio>
             </el-radio-group>
 
-            <el-button-group style="display: block;margin-top: 5px;">
+            <el-button-group style="display: block;margin: 5px 0;">
                 <el-button type="primary" icon="plus" @click.native="userAdd"></el-button>
-                <el-button type="danger" icon="delete" @click.native="userDeleteAll"></el-button>
+                <el-button type="danger" icon="delete" @click.native="userDeleteAll" :disabled="!deleteAll"></el-button>
             </el-button-group>
 
             <el-table
@@ -45,7 +45,7 @@
                 width="100">
             </el-table-column>
             <el-table-column
-                property="register_date"
+                property="register_time"
                 label="注册时间"
                 width="130">
             </el-table-column>
@@ -68,7 +68,7 @@
                 inline-template
                 label="权限"
                 width="100">
-                <div>{{ row.authority===0?'管理员':'录入人员' }}</div>
+                <div>{{ row.auth===0?'管理员':'录入人员' }}</div>
             </el-table-column>
             <el-table-column
                 inline-template
@@ -110,7 +110,7 @@
                 <el-input v-model="formAlignRight.desc" :disabled="!shouldUserAdd"></el-input>
             </el-form-item>
             <el-form-item label="权限">
-                <el-select v-model="formAlignRight.authority">
+                <el-select v-model="formAlignRight.auth">
                     <el-option
                         v-for="item in authorityList"
                         :label="item.name"
@@ -122,7 +122,7 @@
 
             <span slot="footer" class="dialog-footer">
                 <el-button @click.native="dialogCancel">取 消</el-button>
-                <el-button type="primary" @click.native="dialogConfirm" :disabled="formAlignRight.authority===authority">确 定</el-button>
+                <el-button type="primary" @click.native="dialogConfirm" :disabled="formAlignRight.auth===auth">确 定</el-button>
             </span>
         </el-dialog>
 
@@ -130,11 +130,8 @@
 </template>
 
 <script>
-import {removeByValue} from "../../utils/util.js"
 
 var timer = null;
-var temp_selectedArr = [];
-
 
 
 export default {
@@ -150,12 +147,13 @@ export default {
             pageSize: 20,
             dialogFormVisible: false,
             dialogTitle: 'test',
+            deleteAll: false,
             formAlignRight: {
                 id: '',
                 name: '',
                 org_type: '',
                 org: '',
-                authority: '',
+                auth: '',
                 desc: ''
             },
             authorityList: [
@@ -168,9 +166,8 @@ export default {
                 value: 0
               }
             ],
-            authority: '',
-            shouldUserAdd: true,
-            selectedItemList: []
+            auth: '',
+            shouldUserAdd: true
         }
     },
     components: {
@@ -187,9 +184,9 @@ export default {
                 that.fetchServerData()
             }, 500)
         },
-        // ids: function(val) {
-        //     this.saveSelectedItem()
-        // }
+        ids: function(val) { //更改批量删除状态
+            this.deleteAll = val.length>0
+        }
     },
     methods: {
         fetchData(callback,params={}){
@@ -216,19 +213,15 @@ export default {
                 this.accountList = response.data.accountList;
                 this.totalSize = response.data.totalSize;
 
-                var that = this;
-                setTimeout(function() {
-                    that.keepSelectedItem()
-                },0)
             })
         },
         addAccountToServer() {
-            this.authority = ''; //给confirm按钮状态用的
+            this.auth = ''; //给confirm按钮状态用的
             if(!this.formAlignRight.name) {
                 this.$message('请输入用户名');
                 return;
             }
-            if(!this.formAlignRight.authority) {
+            if(this.formAlignRight.auth===undefined) {
                 this.$message('请选择权限');
                 return;
             }
@@ -238,7 +231,7 @@ export default {
                 org_type: this.formAlignRight.organization_type,
                 org: this.formAlignRight.organization,
                 desc: this.formAlignRight.desc,
-                auth: this.formAlignRight.authority
+                auth: this.formAlignRight.auth
             })
             .then((response) => {
                 console.log('account add success!')
@@ -246,7 +239,8 @@ export default {
                     title: '消息',
                     message: '添加 '+this.formAlignRight.name+' 用户成功',
                     type: 'success'
-                })
+                });
+                this.fetchServerData()
             }, (response) => {
 
             });
@@ -255,7 +249,7 @@ export default {
             this.dialogFormVisible = false;
             this.$http.post("sysmgr/account/save",{
                 id: this.formAlignRight.id,
-                auth: this.formAlignRight.authority
+                auth: this.formAlignRight.auth
             })
             .then((response) => {
                 console.log('change authority success!')
@@ -263,7 +257,8 @@ export default {
                     title: '消息',
                     message: '更新权限成功',
                     type: 'success'
-                })
+                });
+                this.fetchServerData()
             }, (response) => {
 
             })
@@ -279,23 +274,42 @@ export default {
                     message: '删除成功',
                     type: 'success'
                 })
+                this.fetchServerData()
             }, (response) => {
 
             })
         },
         handleMultipleSelectionChange(val) {
-            var that = this;
 
-
-            val.forEach(function(item) {
-                if(temp_selectedArr.indexOf(item.id)===-1) {
-                    temp_selectedArr.push(item.id);
-                }
+            this.ids = val.map(function(item) {
+                return item.id
             })
 
-            this.ids = temp_selectedArr
+            // var that = this;
+            //
+            // selectedArr = val.map(function(item) {
+            //     return item.id;
+            // })
+            //
+            //
+            // val.forEach(function(item) {
+            //     if(temp_selectedArr.indexOf(item.id)===-1) {
+            //         temp_selectedArr.push(item.id);
+            //     }
+            // })
+            //
+            // for(var i=0,len=temp_selectedArr.length; i<len; i++) {
+            //     if(selectedArr.indexOf(temp_selectedArr[i])===-1){
+            //         if(!this.pageHasChange) {
+            //             removeByValue(temp_selectedArr, temp_selectedArr[i])
+            //         }
+            //     }
+            // }
 
+            // console.log(temp_selectedArr)
+            // this.ids = temp_selectedArr
 
+            // no need to fix anymore, date: 2016-10-13 11:17:23
             // bug to fix
             // selected==false时，需要清空ids里面的id
 
@@ -310,10 +324,6 @@ export default {
             this.formAlignRight = {}
         },
         userDeleteAll: function() {
-            if(!this.ids.length) {
-                this.$alert('请选择至少一个用户');
-                return;
-            }
             this.$confirm('系统将删除多个账户，是否继续？','提示', {
                 type: 'warning'
             }).then(() => {
@@ -352,17 +362,16 @@ export default {
             this.dialogTitle = '权限修改'
             this.dialogFormVisible = true;
             this.shouldUserAdd = false;
-
             this.formAlignRight = {
                 id: row.id,
                 name: row.name,
                 organization_type: row.organization_type,
                 organization: row.organization,
                 desc: row.desc,
-                authority: row.authority
+                auth: row.auth
             }
 
-            this.authority = row.authority; //给confirm按钮状态用
+            this.auth = row.auth; //给confirm按钮状态用
         },
         dialogConfirm: function() {
             this.shouldUserAdd ? this.addAccountToServer() : this.editAuthorityToServer()
@@ -395,7 +404,7 @@ export default {
         },
         handleCurrentChange: function(index) {
             this.pageIndex = index;
-            this.fetchServerData()
+            this.fetchServerData();
         }
     }
 };

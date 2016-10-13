@@ -5,7 +5,7 @@
             "name": "jack1",
             "desc": "总经理",
             "address": "上海市普陀区金沙江路 1518 弄",
-            "authority": 0,
+            "auth": 0,
             "register_date": "2016-10-10",
             "org": "test",
             "org_type": "abc12"
@@ -15,7 +15,7 @@
             "name": "jack1",
             "desc": "总经理",
             "address": "上海市普陀区金沙江路 1518 弄",
-            "authority": 0,
+            "auth": 0,
             "register_date": "2016-10-10",
             "org": "test",
             "org_type": "abc12"
@@ -25,7 +25,7 @@
             "name": "jack1",
             "desc": "总经理",
             "address": "上海市普陀区金沙江路 1518 弄",
-            "authority": 0,
+            "auth": 0,
             "register_date": "2016-10-10",
             "org": "test",
             "org_type": "abc12"
@@ -35,7 +35,7 @@
             "name": "jack1",
             "desc": "总经理",
             "address": "上海市普陀区金沙江路 1518 弄",
-            "authority": 0,
+            "auth": 0,
             "register_date": "2016-10-10",
             "org": "test",
             "org_type": "abc12"
@@ -45,7 +45,7 @@
             "name": "jack1",
             "desc": "总经理",
             "address": "上海市普陀区金沙江路 1518 弄",
-            "authority": 0,
+            "auth": 0,
             "register_date": "2016-10-10",
             "org": "test",
             "org_type": "abc12"
@@ -55,7 +55,7 @@
             "name": "jack1",
             "desc": "总经理",
             "address": "上海市普陀区金沙江路 1518 弄",
-            "authority": 0,
+            "auth": 0,
             "register_date": "2016-10-10",
             "org": "test",
             "org_type": "abc12"
@@ -65,7 +65,7 @@
             "name": "jack1",
             "desc": "总经理",
             "address": "上海市普陀区金沙江路 1518 弄",
-            "authority": 0,
+            "auth": 0,
             "register_date": "2016-10-10",
             "org": "test",
             "org_type": "abc12"
@@ -75,7 +75,7 @@
             "name": "jack1",
             "desc": "总经理",
             "address": "上海市普陀区金沙江路 1518 弄",
-            "authority": 0,
+            "auth": 0,
             "register_date": "2016-10-10",
             "org": "test",
             "org_type": "abc12"
@@ -85,7 +85,7 @@
             "name": "jack1",
             "desc": "总经理",
             "address": "上海市普陀区金沙江路 1518 弄",
-            "authority": 0,
+            "auth": 0,
             "register_date": "2016-10-10",
             "org": "test",
             "org_type": "abc12"
@@ -95,7 +95,7 @@
             "name": "jack1",
             "desc": "总经理",
             "address": "上海市普陀区金沙江路 1518 弄",
-            "authority": 0,
+            "auth": 0,
             "register_date": "2016-10-10",
             "org": "test",
             "org_type": "abc12"
@@ -105,7 +105,7 @@
             "name": "jack1",
             "desc": "总经理",
             "address": "上海市普陀区金沙江路 1518 弄",
-            "authority": 0,
+            "auth": 0,
             "register_date": "2016-10-10",
             "org": "test",
             "org_type": "abc12"
@@ -115,7 +115,7 @@
             "name": "jack1",
             "desc": "总经理",
             "address": "上海市普陀区金沙江路 1518 弄",
-            "authority": 0,
+            "auth": 0,
             "register_date": "2016-10-10",
             "org": "test",
             "org_type": "abc12"
@@ -125,7 +125,7 @@
             "name": "jack1",
             "desc": "总经理",
             "address": "上海市普陀区金沙江路 1518 弄",
-            "authority": 0,
+            "auth": 0,
             "register_date": "2016-10-10",
             "org": "test",
             "org_type": "abc12"

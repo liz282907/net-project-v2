@@ -65,10 +65,15 @@ app.get("/sysmgr/account/query",function(req,res){
     res.json(accountList);
 });
 
-app.get("/sysmgr/distruibute/query", function(req,res){
+app.get("/sysmgr/distribute/query", function(req,res){
     var systemList = JSON.parse(fs.readFileSync("./mock/system.json"));
     res.json(systemList);
 });
+
+app.get("/sysmgr/dict-theme/query", function(req,res){
+    var themeList = JSON.parse(fs.readFileSync("./mock/theme.json"));
+    res.json(themeList);
+})
 
 module.exports = app.listen(port, function (err) {
   if (err) {
