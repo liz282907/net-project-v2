@@ -11,12 +11,17 @@
     }
 }
 
-.filter-topic{
+.filter-topic,.filter-category{
     vertical-align: middle;
+    .el-radio-group{
+        vertical-align: middle;
+    }
     .tag-key{
         width: 20%;
-        line-height: 36px;
+        margin-right: 20px;
         text-align: right;
         display: inline-block;
+        line-height: 36px;
+
     }
 }

@@ -11,7 +11,16 @@
                           <el-radio-button v-for="topic in topics"  :label="topic"></el-radio-button>
                         </el-radio-group>
                     </div>
-                    <div class="filter-category"></div>
+                    <div class="filter-category">
+                        <span class="tag-key">分类</span>
+                        <el-select v-model="chosenCategories" multiple>
+                            <el-option
+                              v-for="item in categories"
+                              :label="item.zh_name"
+                              :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </div>
                     <div class="file-upload"></div>
 
                     <div class="button-group"></div>
