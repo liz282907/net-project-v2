@@ -101,7 +101,7 @@ input{
 .keyword-textarea{
 	flex:1;
 	border:0px;
-	height:90%;
+	height:100%;
 	overflow:auto;
 	resize:none;
 	

@@ -47,120 +47,23 @@ export default {
 		}
 	},
 	created(){
-		var temp = [
-			{
-				"name":"主题1",
-				"children":[
-					{
-						"name":"专题1",
-						"id":"1"
-					},
-					{
-						"name":"专题2",
-						"id":"2"
-					},
-					{
-						"name":"专题3",
-						"id":"3"
-					},
-					{
-						"name":"专题4",
-						"id":"4"
-					}
-				]
-			},
-			{
-				"name":"主题2",
-				"children":[
-					{
-						"name":"专题1",
-						"id":"5"
-					},
-					{
-						"name":"专题2",
-						"id":"6"
-					},
-					{
-						"name":"专题3",
-						"id":"7"
-					},
-					{
-						"name":"专题4",
-						"id":"8"
-					}
-				]
-			},
-			{
-				"name":"主题3",
-				"children":[
-					{
-						"name":"专题1",
-						"id":"5"
-					},
-					{
-						"name":"专题2",
-						"id":"6"
-					},
-					{
-						"name":"专题3",
-						"id":"7"
-					},
-					{
-						"name":"专题4",
-						"id":"8"
-					}
-				]
-			},
-			{
-				"name":"主题4",
-				"children":[
-					{
-						"name":"专题1",
-						"id":"5"
-					},
-					{
-						"name":"专题2",
-						"id":"6"
-					},
-					{
-						"name":"专题3",
-						"id":"7"
-					},
-					{
-						"name":"专题4",
-						"id":"8"
-					}
-				]
-			},
-			{
-				"name":"主题5",
-				"children":[
-					{
-						"name":"专题1",
-						"id":"5"
-					},
-					{
-						"name":"专题2",
-						"id":"6"
-					},
-					{
-						"name":"专题3",
-						"id":"7"
-					},
-					{
-						"name":"专题4",
-						"id":"8"
-					}
-				]
+		var temp = [];
+		this.$http.get('keyword/loadTitle',{
+
+		}).then((response) => {
+			// success callback
+			temp = response.body;
+			for(var key in temp){
+				temp[key].showflag = false;
+				for(var topic in temp[key].children){
+					temp[key].children[topic].isCurrent = false;
+				}
 			}
-		];
-		for(var key in temp){
-			temp[key].showflag = false;
-			for(var topic in temp[key].children){
-				temp[key].children[topic].isCurrent = false;
-			}
-		}
-		this.titleList = temp;
+			this.titleList = temp;
+		}, (response) => {
+			// error callback
+			alert("专题加载错误");
+		});
 	},
 	components: {
 		EvolveExport,
@@ -175,11 +78,17 @@ export default {
 			title.showflag = !title.showflag;
 		},
 		add_topic:function(title){
-			alert(title.name);
 			this.tabList[0].isCurrent = true;
 			this.tabList[1].isCurrent = false;
 			
-			this.topicCurrent = "";
+			if(this.topicCurrent == ""){
+				if(confirm("是否放弃当前未保存的专题"))
+					this.topicCurrent = null;
+				else 
+					return;
+			}
+			else
+				this.topicCurrent = "";
 		},
 		tab_click:function(tab,tabList){
 			for(var key in tabList){

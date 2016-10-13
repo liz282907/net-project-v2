@@ -43,8 +43,8 @@ var keyword = function(option){
 	
 	function load_data(){
 		$.ajax({
-			url:"/static/data/daoru.json",
-			type:"get",
+			url:"/keyword/loadKeyword",
+			type:"post",
 			data:{
 				id:_id
 			},
@@ -97,7 +97,28 @@ var keyword = function(option){
 		if(choseSystem == "")
 			alert("请配置下发系统");
 		else{
+			var tempObject = {};
+			var temp = [];
+			for(var i=0;i<_row.length;i++){
+				temp.push(_row[i].total());
+			}
 			
+			tempObject.data = temp;
+			$.ajax({
+				url:"/keyword/saveKeyword",
+				type:"post",
+				data:{
+					id:_id,
+					keywordPackage: tempObject,
+					system:choseSystem.split(" ")
+				},
+				success:function(d){
+					alert("保存数据成功");
+				},
+				error:function(){
+					alert("保存数据错误");
+				}
+			});
 		}
 	}
 	
@@ -139,15 +160,15 @@ var keyword = function(option){
 			temp.push(_row[i].total());
 		}
 		
-		tempObject.name = _id;
 		tempObject.data = temp;
 		
 		$.ajax({
-			url:"",
+			url:"/keyword/saveKeyword",
 			type:"post",
 			data:{
 				id:_id,
-				keywordPackage: tempObject
+				keywordPackage: tempObject,
+				system:[]
 			},
 			success:function(d){
 				alert("保存数据成功");
@@ -340,6 +361,8 @@ var keyword = function(option){
 					textareaDelList.splice(i,1);
 					textareaTurnList[i].remove();
 					textareaTurnList.splice(i,1);
+					textareaAddList[i].remove();
+					textareaAddList.splice(i,1);
 				}
 			}
 		}
@@ -357,8 +380,8 @@ var keyword = function(option){
 			for(var i = 0;i<textareaList.length;i++){
 				if(textareaAddList[i][0] === el){
 					$.ajax({
-						url:"/static/data/diwei.json",
-						type:"get",
+						url:"/keyword/loadBaseword",
+						type:"post",
 						data:{
 							pageSize:10,
 							pageIndex:1,
@@ -405,8 +428,8 @@ var keyword = function(option){
 				bg.remove();
 				
 				$.ajax({
-					url:"/static/data/yansheng.json",
-					type:"get",
+					url:"/keyword/turnKeyword",
+					type:"post",
 					data:{
 						mode:choseMode,
 						keyword:oldKeyword

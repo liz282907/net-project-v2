@@ -57,13 +57,45 @@ export default {
 	
 	watch:{
 		"id":function(){
-			alert(this.id);
+			this.$http.get('keyword/hitRate',{
+				topic: "",
+				pageSize:"",
+				pageIndex:1,
+				orderBy: "",
+				range:"",
+				desc: true
+			}).then((response) => {
+				// success callback
+				this.transformedWordList = response.body;
+				for(var obj in this.transformedWordList){
+					var temp = this.transformedWordList[obj];
+					temp.hitRate = Math.round(parseFloat(temp.hitRate)*10000)/100 + "%";
+				}
+			}, (response) => {
+				// error callback
+			});	
 		}
 	},
 
 	methods:{
 		handlePageClick:function(page){
-			alert(page);
+			this.$http.get('keyword/hitRate',{
+				topic: "",
+				pageSize:"",
+				pageIndex:page,
+				orderBy: "",
+				range:"",
+				desc: true
+			}).then((response) => {
+				// success callback
+				this.transformedWordList = response.body;
+				for(var obj in this.transformedWordList){
+					var temp = this.transformedWordList[obj];
+					temp.hitRate = Math.round(parseFloat(temp.hitRate)*10000)/100 + "%";
+				}
+			}, (response) => {
+				// error callback
+			});	
 		},
 		search_keydown:function(){
 			alert(this.searchContent);
@@ -71,109 +103,23 @@ export default {
 	},
   
   created:function(){
-		this.transformedWordList = [
-				{
-					"id":1,
-					"name":"低危词",
-					"sensitivity":"30%",
-					"searchNum":1299,
-					"hitNum":956,
-					"hitRate":"0.1234563",
-					"trend":"增长",
-					"date":"2016-09-02",
-					"event":"习近平55",
-					"route": "test"
-				},
-				{
-					"id":2,
-					"name":"低危词",
-					"sensitivity":"30%",
-					"searchNum":333,
-					"hitNum":129,
-					"hitRate":"0.1234563",
-					"trend":"增长",
-					"date":"2016-09-03",
-					"event":"习近平44",
-					"route":  "test"
-				},
-				{
-					"id":3,
-					"name":"低危词",
-					"sensitivity":"30%",
-					"searchNum":1299,
-					"hitNum":956,
-					"hitRate":"0.1234563",
-					"trend":"增长",
-					"date":"2016-09-02",
-					"event":"习近平12",
-					"route": "test"
-				},
-				{
-					"id":4,
-					"name":"低危词",
-					"sensitivity":"30%",
-					"searchNum":333,
-					"hitNum":129,
-					"hitRate":"0.1234563",
-					"trend":"增长",
-					"date":"2016-09-03",
-					"event":"习近平sdfsdf",
-					"route":  "test"
-				},
-				{
-					"id":5,
-					"name":"低危词",
-					"sensitivity":"30%",
-					"searchNum":1299,
-					"hitNum":956,
-					"hitRate":"0.1234563",
-					"trend":"增长",
-					"date":"2016-09-02",
-					"event":"习近平sdf",
-					"route": "test"
-				},
-				{
-					"id":6,
-					"name":"低危词",
-					"sensitivity":"30%",
-					"searchNum":333,
-					"hitNum":129,
-					"hitRate":"0.1234563",
-					"trend":"增长",
-					"date":"2016-09-03",
-					"event":"习近平sdfa",
-					"route":  "test"
-				},
-				{
-					"id":7,
-					"name":"低危词",
-					"sensitivity":"30%",
-					"searchNum":1299,
-					"hitNum":956,
-					"hitRate":"0.1234563",
-					"trend":"增长",
-					"date":"2016-09-02",
-					"event":"习近平df",
-					"route": "test"
-				},
-				{
-					"id":8,
-					"name":"低危词",
-					"sensitivity":"30%",
-					"searchNum":333,
-					"hitNum":129,
-					"hitRate":"0.1234563",
-					"trend":"增长",
-					"date":"2016-09-03",
-					"event":"习近平f",
-					"route":  "test"
-				}
-			];
-			
+		this.$http.get('keyword/hitRate',{
+			topic: "",
+            pageSize:"",
+            pageIndex:1,
+            orderBy: "",
+            range:"",
+            desc: true
+		}).then((response) => {
+			// success callback
+			this.transformedWordList = response.body;
 			for(var obj in this.transformedWordList){
 				var temp = this.transformedWordList[obj];
 				temp.hitRate = Math.round(parseFloat(temp.hitRate)*10000)/100 + "%";
 			}
+		}, (response) => {
+			// error callback
+		});			
   },
 
   mounted:function(){
