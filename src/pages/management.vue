@@ -65,7 +65,11 @@
                 <el-table-column type="selection" width="50"></el-table-column>
                 <el-table-column inline-template label="关键词" width="120">
                     <div>
-                        <div v-if="isEditingArr[$index]"><input type="text" :value="row.newKeyword" /></div>
+                        <div v-if="isEditingArr[$index]">
+                            <el-input :placeholder="row.keyword" size="small"
+                              v-model="row.keyword" >
+                            </el-input>
+                        </div>
                         <div v-else>{{ row.keyword }}</div>
                     </div>
 
@@ -74,9 +78,15 @@
                 <el-table-column property="auditTime" label="审核时间" show-tooltip-when-overflow sortable></el-table-column>
                 <el-table-column property="source" label="来源" ></el-table-column>
                 <el-table-column  inline-template label="分类" show-tooltip-when-overflow>
-                    <ul>
-                        <el-tag v-for="item in row.category" class="inner-tag">{{item}}</el-tag>
-                    </ul>
+                    <div>
+                        <ul v-show="!isEditingArr[$index]">
+                            <el-tag v-for="item in row.category" class="inner-tag">{{categoryDict[item]}}</el-tag>
+                        </ul>
+                        <el-select v-model="row.category" multiple v-show="isEditingArr[$index]" class="dropdown-cell">
+                            <el-option v-for="item in categories" :label="item.zh_name" :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </div>
                 </el-table-column>
                 <el-table-column  label="状态" property="state.zh_name" width="100"></el-table-column>
                 <el-table-column inline-template label="操作">
@@ -101,8 +111,8 @@
                         </div>
                         <div v-show="isEditingArr[$index]" class="buttongroup-wrapper">
                             <el-button-group class="action-group ">
-                              <el-button type="primary" icon="circle-check" size="mini" @click.native="audit(row,3,$index)">更新</el-button>
-                              <el-button type="primary" icon="circle-close" size="mini" @click.native="audit(row,4,$index)">删除</el-button>
+                              <el-button type="primary" icon="circle-check" size="mini" @click.native="updateWord($index)">更新</el-button>
+                              <el-button type="primary" icon="circle-close" size="mini" @click.native="cancel($index)">取消</el-button>
                             </el-button-group>
                         </div>
 
@@ -130,7 +140,7 @@
 </template>
 
 <script>
-import keywordList from '../../utils/mock.js';
+// import keywordList from '../../utils/mock.js';
 import { urls, auditStates } from '../../utils/constants.js';
 let timer;
 
@@ -160,7 +170,7 @@ export default {
         filterContent: 1,
         categories: [],
         auditStates,
-        keywordList ,
+        keywordList: [] ,
         isAdmin: true,
         isEditingArr: [],
 
@@ -169,6 +179,7 @@ export default {
         pageSize: 20,
 
         tableSelection:[],
+        test: []
 
     }
   },
@@ -186,6 +197,20 @@ export default {
                 searchInput: this.searchInput
             }
 
+        },
+
+        categoryDict(){
+           return this.categories.reduce((prev,cur)=>{
+                prev[cur["id"]] = cur["zh_name"];
+                return prev;
+            },{});
+        },
+
+        prevKeywordList(){
+            return this.keywordList.map(item=> ({
+                keyword: item.keyword,
+                category: item.category
+            }))
         }
   },
 
@@ -339,8 +364,24 @@ export default {
 
     editKeyword(index){
         // debugger;
+        this.change2EditState(index,true);
+        // this.$set(this.isEditingArr,index,true);
+    },
 
-        this.$set(this.isEditingArr,index,true);
+    updateWord(index){
+        this.change2EditState(index,false);
+        //post
+        debugger;
+    },
+
+    cancel(index){
+        this.change2EditState(index,false);
+        this.updateTableRow(index,'keyword',this.prevKeywordList[index].keyword);
+        this.updateTableRow(index,'category',this.prevKeywordList[index].category);
+    },
+
+    change2EditState(index,state){
+        this.$set(this.isEditingArr,index,state);
     }
   },
 

@@ -1,8 +1,13 @@
-1. categories是后台给的还是？
+## 关键词管理接口
+>
+@author: luchen
+
+>email : chenlu.seu@gmail.com
+
 
 ### 获取用户权限
 
-
+这部分接口已有吗？还是在登录的时候已经全局获取到了
 
 ### 获取分类
 
@@ -55,7 +60,8 @@ params:{
         "keyword": "习近平",
         "inputTime": "2016-07-24 19:23",   //录入时间
         "auditTime": "2016-07-29 19:33",   //审核时间
-        "source": "张三",                 
+        "source": "张三",    
+        "category": [1,3], //对应于上面的category列表             
         "state": {"zh_name":"已通过","id":3}  //2：未审核，3：已通过，4：已拒绝
     },
     {
@@ -63,6 +69,7 @@ params:{
         "inputTime": "2016-07-24 19:23",
         "auditTime": "2016-07-29 19:33",
         "source": "张三",
+        "category": [1],
         "state": {"zh_name":"已通过","id":3}  //2：未审核，3：已通过，4：已拒绝
     }
     ]
@@ -71,6 +78,8 @@ params:{
 
 ```
 
+
+---
 
 ### 关键词的编辑、删除、审核
 
@@ -88,7 +97,7 @@ params:{
 单个词审核/批量通过,
 如果没有keywords这一项，表明全部通过/拒绝
 
-### 关键词删除
+#### 关键词删除
 ```
 url: yoursite.com/management/delete
 method: "post"
@@ -99,49 +108,17 @@ params:{
 ```
 
 
-词的增删改
-
 #### 更新（update）
-
-需要取消上一个同名的请求
-
 **request**
 
 ```
-url: yoursite.com/#!/title
+url: yoursite.com/management/update
 method: "post"
 request body:{
-    category:"forbidden words"|"check words"|"low danger",
-    [id：6,]//若词本身唯一，则该字段可不加
-    prevWord:"习大大",
-    newWord:"习近平", 
-    action:"patch"  
+    userid: ?
+    prevWord: "习大大",
+    newWord: "习近平",
+    category: [1,3],
 }
 ```
 
-#### 增（create）
-
-**request**
-
-```
-url: yoursite.com/#!/title
-method: "post"
-request body:{
-    category:"forbidden words"|"check words"|"low danger",
-    word:"习近平",    
-}
-```
-
-#### 删（create）
-
-**request**
-
-```
-url: yoursite.com/#!/title
-method: "post"
-request body:{
-    category:"forbidden words"|"check words"|"low danger",
-    word:"习近平"  //此处同上，id的问题   ,
-    action:"delete"
-}
-```

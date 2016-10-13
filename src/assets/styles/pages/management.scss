@@ -3,10 +3,12 @@ span{
 }
 .manage-container{
     .el-input{
-        width: 80px;
+        min-width: 80px;
     }
 }
-
+// .el-table .dropdown-cell td .cell{
+//     overflow: auto;
+// }
 
 .manage-container{
     display: flex;
@@ -112,7 +114,11 @@ span{
     .inner-tag{
         margin-left: 10px;
     }
+    .el-select{
+        min-width: 100px;
+    }
 }
+
 
 
 
