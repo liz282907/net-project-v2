@@ -4,9 +4,6 @@
 @import './assets/styles/components/index.scss';
 @import './assets/styles/pages/index.scss';
 
-html {
-  height: 100%;
-}
 
 .container{
   background-color: #F4F4F4;
@@ -14,7 +11,7 @@ html {
 </style>
 
 <template>
-  <div id="#app">
+  <div>
       <main-header></main-header>
       <main class="container">
           <router-view></router-view>

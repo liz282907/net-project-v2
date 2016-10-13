@@ -75,9 +75,9 @@
 
                 </el-table-column>
                 <el-table-column property="inputTime" label="录入时间" sortable></el-table-column>
-                <el-table-column property="auditTime" label="审核时间" show-tooltip-when-overflow sortable></el-table-column>
+                <el-table-column property="auditTime" label="审核时间" sortable></el-table-column>
                 <el-table-column property="source" label="来源" ></el-table-column>
-                <el-table-column  inline-template label="分类" show-tooltip-when-overflow>
+                <el-table-column  inline-template label="分类" >
                     <div>
                         <ul v-show="!isEditingArr[$index]">
                             <el-tag v-for="item in row.category" class="inner-tag">{{categoryDict[item]}}</el-tag>
@@ -371,7 +371,17 @@ export default {
     updateWord(index){
         this.change2EditState(index,false);
         //post
-        debugger;
+        // debugger;
+        const {keyword,category} = this.prevKeywordList;
+        this.$http.post(urls.update,{
+            prevWord: this.prevKeywordList[index],
+            newWord: keyword,
+            category: category
+        }).then(response=>{
+             this.showMessage("更新成功","success");
+        }).catch(err=>{
+            this.showMessage("更新失败","error");
+        })
     },
 
     cancel(index){

@@ -9,9 +9,11 @@ const navList = [
 const serverPath = '';
 const urls = {
     'category': serverPath + '/management/category',
+    'topic': serverPath + '/topic',
     'keywordList': serverPath + '/management/keywordList',
     'audit': serverPath + '/management/audit',
-    'delete': serverPath + '/management/delete'
+    'delete': serverPath + '/management/delete',
+    'update': serverPath + '/management/update',
 };
 const auditStates = [
     {zh_name: '全部', id: 1},

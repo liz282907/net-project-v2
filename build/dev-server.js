@@ -59,6 +59,11 @@ var staticPath = path.posix.join(config.dev.assetsPublicPath, config.dev.assetsS
 app.use(staticPath, express.static('./static'))
 
 
+app.get("/topic",function(req,res){
+  var data = JSON.parse(fs.readFileSync('./mock/topic.json'));
+  res.json(data);
+});
+
 app.get("/management/category",function(req,res){
   var data = JSON.parse(fs.readFileSync('./mock/category.json'));
   res.json(data);
@@ -74,6 +79,10 @@ app.post("/management/audit",function(req,res){
   res.json(data);
 });
 app.post("/management/delete",function(req,res){
+  var data = JSON.stringify({msg: "success"});
+  res.json(data);
+});
+app.post("/management/update",function(req,res){
   var data = JSON.stringify({msg: "success"});
   res.json(data);
 });

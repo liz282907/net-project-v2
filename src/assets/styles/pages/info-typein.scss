@@ -1,0 +1,22 @@
+/*   reset   */
+.el-tabs{
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.typein-container{
+    background-color: $white;
+    .typein-nav{
+        padding: 30px;
+    }
+}
+
+.filter-topic{
+    vertical-align: middle;
+    .tag-key{
+        width: 20%;
+        line-height: 36px;
+        text-align: right;
+        display: inline-block;
+    }
+}
