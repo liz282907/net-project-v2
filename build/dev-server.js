@@ -70,9 +70,14 @@ app.get("/sysmgr/distribute/query", function(req,res){
     res.json(systemList);
 });
 
-app.get("/sysmgr/dict-theme/query", function(req,res){
+app.get("/sysmgr/dict/query", function(req,res){
     var themeList = JSON.parse(fs.readFileSync("./mock/theme.json"));
     res.json(themeList);
+})
+
+app.get("/sysmgr/dict-category/query", function(req,res){
+    var categoryList = JSON.parse(fs.readFileSync("./mock/category.json"));
+    res.json(categoryList);
 })
 
 module.exports = app.listen(port, function (err) {

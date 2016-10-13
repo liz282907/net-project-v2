@@ -66,6 +66,7 @@ export default {
             themeName: '',
             themeId: 1,
             pageSize: 20,
+            pageIndex: 1,
             totalSize: 20,
             dialogFormVisible: false,
             dialogTitle: '',
@@ -92,10 +93,11 @@ export default {
         fetchData(callback,params={}) {
             let defaultParams = {
                 pageSize: this.pageSize,
-                pageIndex: this.pageIndex
+                pageIndex: this.pageIndex,
+                type: 0
             };
             let data = Object.assign({},defaultParams,params);
-            this.$http.get("/sysmgr/dict-theme/query",
+            this.$http.get("/sysmgr/dict/query",
                 {
                     params:data
                 })
@@ -111,7 +113,7 @@ export default {
             })
         },
         deleteThemeFromServer: function() {
-            this.$http.post("/sysmgr/dict-theme/delete",{
+            this.$http.post("/sysmgr/dict/delete",{
                 ids: [this.themeId]
             })
             .then((response) => {
@@ -142,6 +144,7 @@ export default {
         themeAdd: function() {
             this.dialogTitle = '主题添加';
             this.input_name = '';
+            this.themeId = '';
             this.dialogFormVisible = true;
             this.shouldThemeAdd = true;
             this.type = 0;
@@ -150,7 +153,7 @@ export default {
             this.dialogTitle = '主题编辑';
             this.themeName = name;
             this.themeId = id;
-            this.type = null;
+            this.type = 0;
             this.input_name = name;
             this.dialogFormVisible = true;
             this.shouldThemeAdd = false;
@@ -163,7 +166,7 @@ export default {
             })
         },
         dialogConfirm: function() {
-            this.$http.post("/sysmgr/dict-theme/save", {
+            this.$http.post("/sysmgr/dict/save", {
                 id: this.themeId,
                 name: this.input_name,
                 type: this.type
@@ -175,6 +178,7 @@ export default {
                     type: 'success'
                 })
                 this.fetchServerData()
+                this.dialogFormVisible = false;
             },(response) => {
 
             })

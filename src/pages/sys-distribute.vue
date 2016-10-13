@@ -253,6 +253,7 @@ export default {
 
                 })
             }
+            this.dialogFormVisible = false;
         },
         userAdd: function() {
             this.dialogTitle = "系统添加";
