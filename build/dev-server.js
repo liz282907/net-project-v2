@@ -64,6 +64,11 @@ app.get("/topic",function(req,res){
   res.json(data);
 });
 
+app.post("/upload",function(req,res){
+  var data = JSON.parse(fs.readFileSync('./mock/topic.json'));
+  res.json(data);
+});
+
 app.get("/management/category",function(req,res){
   var data = JSON.parse(fs.readFileSync('./mock/category.json'));
   res.json(data);

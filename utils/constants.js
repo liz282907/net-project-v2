@@ -14,6 +14,8 @@ const urls = {
     'audit': serverPath + '/management/audit',
     'delete': serverPath + '/management/delete',
     'update': serverPath + '/management/update',
+    'upload': serverPath + '/upload',
+    'typein': serverPath + '/typein',
 };
 const auditStates = [
     {zh_name: '全部', id: 1},

@@ -136,6 +136,23 @@
             </div>
 
         </div>
+        <!-- 一种是model为keywordList[curIndex],一种是form然后更新某一行-->
+        <el-dialog title="编辑关键词" v-model="dialog.dialogFormVisible" size="tiny">
+          <el-form :model="dialog.form">
+            <el-form-item label="关键词" :label-width="dialog.formLabelWidth">
+              <el-input v-model="dialog.form.keyword" auto-complete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="分类" label-width="dialog.formLabelWidth">
+              <el-select v-model="dialog.form.category" placeholder="请选择分类" multiple>
+                <el-option :label="item.zh_name" v-for="item in categories.slice(1)" :value="item.id"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-form>
+          <span slot="footer" class="dialog-footer">
+            <el-button @click.native="dialog.dialogFormVisible = false">取 消</el-button>
+            <el-button type="primary" @click.native="updateWord">确 定</el-button>
+          </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -162,6 +179,16 @@ export default {
   data(){
     return {
         fullscreenLoading: false,
+        dialog:{
+            dialogFormVisible: false,
+            formLabelWidth: 200,
+            form: {
+                keyword: '',
+                category: []
+            },
+            curIndex: null
+        },
+
 
         curTopic: "习近平",
         searchInput: '',
@@ -247,8 +274,9 @@ export default {
         this.tableSelection = val;
     },
 
-    handleCurrentChange(){
+    handleCurrentChange(curPage){
         //存储用户选项
+        this.curPage = curPage;
         this.fetchKeywordList();
     },
     /* 反选 */
@@ -364,28 +392,52 @@ export default {
 
     editKeyword(index){
         // debugger;
-        this.change2EditState(index,true);
+        this.dialog.dialogFormVisible = true;
+        const curRowData = this.keywordList[index];
+        // let formData = this.dialog.form;
+        // ({ keyword: formData.keyword,category:formData.category} = curRowData);
+        this.dialog.form.keyword= curRowData.keyword;
+        this.dialog.form.category = curRowData.category;
+        this.dialog.curIndex = index;
+        // this.change2EditState(index,true);
         // this.$set(this.isEditingArr,index,true);
     },
 
-    updateWord(index){
-        this.change2EditState(index,false);
+    updateWord(){
+        // this.change2EditState(index,false);
+        this.dialog.dialogFormVisible = false
         //post
-        // debugger;
-        const {keyword,category} = this.prevKeywordList;
+        /* 更新前的数据 */
+        const {keyword,category} = this.keywordList[this.dialog.curIndex],
+              index = this.dialog.curIndex;
+
+
+        /* 无效请求，词或分类没有变更时*/
+        if( keyword===this.dialog.form.keyword &&
+            JSON.stringify(this.dialog.form.category.sort())===JSON.stringify(category.sort()))
+            return;
         this.$http.post(urls.update,{
-            prevWord: this.prevKeywordList[index],
-            newWord: keyword,
-            category: category
+            prevWord: keyword,
+            newWord: this.dialog.form.keyword,
+            category: this.dialog.form.category
         }).then(response=>{
-             this.showMessage("更新成功","success");
+            this.showMessage("更新成功","success");
+
+            this.updateTableRow(index,'keyword',this.dialog.form.keyword);
+            this.updateTableRow(index,'category',this.dialog.form.category);
+
         }).catch(err=>{
             this.showMessage("更新失败","error");
+
+            this.updateTableRow(index,'keyword',keyword);
+            this.updateTableRow(index,'category',category);
+
         })
     },
 
-    cancel(index){
-        this.change2EditState(index,false);
+    cancel(){
+        // this.change2EditState(index,false);
+        const index = this.dialog.curIndex;
         this.updateTableRow(index,'keyword',this.prevKeywordList[index].keyword);
         this.updateTableRow(index,'category',this.prevKeywordList[index].category);
     },

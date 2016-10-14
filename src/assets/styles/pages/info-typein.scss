@@ -3,25 +3,51 @@
     width: 100%;
     box-sizing: border-box;
 }
+.el-tabs__content{
+    overflow: visible;
+}
+.el-upload{
+    display: inline-block;
+    vertical-align: top;
+}
+.el-select__tags{
+    bottom: 5px;
+}
 
+.tag-key{
+    width: 20%;
+    margin-right: 20px;
+    text-align: right;
+    display: inline-block;
+    line-height: 36px;
+}
+
+/*********************/
 .typein-container{
     background-color: $white;
     .typein-nav{
         padding: 30px;
     }
 }
-
+.form-item{
+    margin-top: 10px;
+}
 .filter-topic,.filter-category{
     vertical-align: middle;
     .el-radio-group{
         vertical-align: middle;
     }
-    .tag-key{
-        width: 20%;
-        margin-right: 20px;
-        text-align: right;
+    .el-select{
+        width: 10%;
         display: inline-block;
-        line-height: 36px;
-
     }
+
+}
+.button-group{
+
+    text-align: center;
+}
+.file-upload{
+    // height: 200px;
+    // background-color: red;
 }
