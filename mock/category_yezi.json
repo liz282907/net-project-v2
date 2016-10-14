@@ -1,0 +1,125 @@
+{
+    "categoryList": [
+        {
+            "id": 24,
+            "name": "国内事件",
+            "parent_id": 1,
+            "type": 1
+        },
+        {
+            "id": 22,
+            "name": "出访",
+            "parent_id": 1,
+            "type": 1
+        },
+        {
+            "id": 21,
+            "name": "下基层",
+            "parent_id": 1,
+            "type": 1
+        },
+        {
+            "id": 20,
+            "name": "国际热点",
+            "parent_id": 1,
+            "type": 1
+        },
+        {
+            "id": 19,
+            "name": "讲话",
+            "parent_id": 1,
+            "type": 1
+        },
+        {
+            "id": 24,
+            "name": "国内事件",
+            "parent_id": 1,
+            "type": 1
+        },
+        {
+            "id": 22,
+            "name": "出访",
+            "parent_id": 1,
+            "type": 1
+        },
+        {
+            "id": 21,
+            "name": "下基层",
+            "parent_id": 1,
+            "type": 1
+        },
+        {
+            "id": 20,
+            "name": "国际热点",
+            "parent_id": 1,
+            "type": 1
+        },
+        {
+            "id": 19,
+            "name": "讲话",
+            "parent_id": 1,
+            "type": 1
+        },
+        {
+            "id": 24,
+            "name": "国内事件",
+            "parent_id": 1,
+            "type": 1
+        },
+        {
+            "id": 22,
+            "name": "出访",
+            "parent_id": 1,
+            "type": 1
+        },
+        {
+            "id": 21,
+            "name": "下基层",
+            "parent_id": 1,
+            "type": 1
+        },
+        {
+            "id": 20,
+            "name": "国际热点",
+            "parent_id": 1,
+            "type": 1
+        },
+        {
+            "id": 19,
+            "name": "讲话",
+            "parent_id": 1,
+            "type": 1
+        },
+        {
+            "id": 24,
+            "name": "国内事件",
+            "parent_id": 1,
+            "type": 1
+        },
+        {
+            "id": 22,
+            "name": "出访",
+            "parent_id": 1,
+            "type": 1
+        },
+        {
+            "id": 21,
+            "name": "下基层",
+            "parent_id": 1,
+            "type": 1
+        },
+        {
+            "id": 20,
+            "name": "国际热点",
+            "parent_id": 1,
+            "type": 1
+        },
+        {
+            "id": 19,
+            "name": "讲话",
+            "parent_id": 1,
+            "type": 1
+        }
+    ],
+    "totalSize": 20
+}

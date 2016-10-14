@@ -15,6 +15,8 @@ var port = process.env.PORT || config.dev.port
 // https://github.com/chimurai/http-proxy-middleware
 var proxyTable = config.dev.proxyTable
 
+var fs = require("fs");
+
 var app = express()
 var compiler = webpack(webpackConfig)
 
@@ -91,6 +93,25 @@ app.post("/management/update",function(req,res){
   var data = JSON.stringify({msg: "success"});
   res.json(data);
 });
+app.get("/sysmgr/account/query",function(req,res){
+    var accountList = JSON.parse(fs.readFileSync("./mock/account.json"));
+    res.json(accountList);
+});
+
+app.get("/sysmgr/distribute/query", function(req,res){
+    var systemList = JSON.parse(fs.readFileSync("./mock/system.json"));
+    res.json(systemList);
+});
+
+app.get("/sysmgr/dict/query", function(req,res){
+    var themeList = JSON.parse(fs.readFileSync("./mock/theme.json"));
+    res.json(themeList);
+})
+
+app.get("/sysmgr/dict-category/query", function(req,res){
+    var categoryList = JSON.parse(fs.readFileSync("./mock/category_yezi.json"));
+    res.json(categoryList);
+})
 
 module.exports = app.listen(port, function (err) {
   if (err) {
