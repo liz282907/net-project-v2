@@ -26,7 +26,7 @@
             </table>
       </div>
       <div class="page-wrapper">
-          <pagination :total-size="totalSize" @page-click="handlePageClick"></pagination>
+          <pagination v-if="paginationFlag" :total-size="totalSize" @page-click="handlePageClick"></pagination>
       </div>
 
 
@@ -48,7 +48,8 @@ export default {
 	return {
 		totalSize:50,
 		transformedWordList:{},
-		searchContent:""
+		searchContent:"",
+		paginationFlag:false
 	}
 	},
 	computed:{
@@ -57,45 +58,13 @@ export default {
 	
 	watch:{
 		"id":function(){
-			this.$http.get('keyword/hitRate',{
-				topic: "",
-				pageSize:"",
-				pageIndex:1,
-				orderBy: "",
-				range:"",
-				desc: true
-			}).then((response) => {
-				// success callback
-				this.transformedWordList = response.body;
-				for(var obj in this.transformedWordList){
-					var temp = this.transformedWordList[obj];
-					temp.hitRate = Math.round(parseFloat(temp.hitRate)*10000)/100 + "%";
-				}
-			}, (response) => {
-				// error callback
-			});	
+			loadData(this,{});
 		}
 	},
 
 	methods:{
 		handlePageClick:function(page){
-			this.$http.get('keyword/hitRate',{
-				topic: "",
-				pageSize:"",
-				pageIndex:page,
-				orderBy: "",
-				range:"",
-				desc: true
-			}).then((response) => {
-				// success callback
-				this.transformedWordList = response.body;
-				for(var obj in this.transformedWordList){
-					var temp = this.transformedWordList[obj];
-					temp.hitRate = Math.round(parseFloat(temp.hitRate)*10000)/100 + "%";
-				}
-			}, (response) => {
-				// error callback
-			});	
+			loadData(this,{pageIndex:page});
 		},
 		search_keydown:function(){
 			alert(this.searchContent);
@@ -103,28 +72,35 @@ export default {
 	},
   
   created:function(){
-		this.$http.get('keyword/hitRate',{
-			topic: "",
-            pageSize:"",
-            pageIndex:1,
-            orderBy: "",
-            range:"",
-            desc: true
-		}).then((response) => {
-			// success callback
-			this.transformedWordList = response.body;
-			for(var obj in this.transformedWordList){
-				var temp = this.transformedWordList[obj];
-				temp.hitRate = Math.round(parseFloat(temp.hitRate)*10000)/100 + "%";
-			}
-		}, (response) => {
-			// error callback
-		});			
+		loadData(this,{});		
   },
 
   mounted:function(){
 		console.log(this.transformedWordList);
   }
+}
+
+function loadData(vm,o){
+	vm.$http.post('keyword/hitRate',{
+		topic: vm.id,
+		pageSize:10,
+		pageIndex:o.pageIndex || 1,
+		orderBy: o.orderBy || "all",
+		range:"all",
+		desc: true
+	}).then((response) => {
+		// success callback
+		vm.transformedWordList = response.body["wordList"];
+		vm.totalSize = response.body["totalSize"];
+		for(var obj in vm.transformedWordList){
+			var temp = vm.transformedWordList[obj];
+			temp.hitRate = Math.round(parseFloat(temp.hitRate)*10000)/100 + "%";
+		}
+		if(vm.transformedWordList.length != 0)
+				vm.paginationFlag = true;
+	}, (response) => {
+		// error callback
+	});	
 }
 </script>
 

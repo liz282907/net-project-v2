@@ -68,7 +68,7 @@ app.post("/keyword/turnKeyword",function(req,res){
     res.json(temp);
 });
 
-app.get("/keyword/hitRate",function(req,res){
+app.post("/keyword/hitRate",function(req,res){
     var temp = JSON.parse(fs.readFileSync("./json/evolve_hitrate.json"));
     res.json(temp);
 });
