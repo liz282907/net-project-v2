@@ -185,7 +185,7 @@ export default {
             }, 500)
         },
         ids: function(val) { //更改批量删除状态
-            this.deleteAll = val.length>0
+            this.deleteAll = val.length>1
         }
     },
     methods: {

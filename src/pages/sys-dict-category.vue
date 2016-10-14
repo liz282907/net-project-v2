@@ -2,15 +2,6 @@
 
     <div class="">
         <el-card class="box-card" style="height: 800px;">
-            <el-input placeholder="请输入内容" v-model="search_input" style="width: 300px;" icon="search" class="search_input">
-                <el-select v-model="theme_select" slot="prepend">
-                    <el-option
-                        v-for="theme in themeList"
-                        :label="theme.name"
-                        :value="theme.id">
-                    </el-option>
-                </el-select>
-            </el-input>
 
             <el-button-group style="display: block;margin: 5px 0;">
                 <el-button type="primary" icon="plus" @click.native="categoryAdd"></el-button>
@@ -131,21 +122,21 @@ export default {
             this.fetchServerData()
         },
         ids: function(val) {
-            this.deleteAll = val.length>0
+            this.deleteAll = val.length>1
         },
         input_name: function(val) {
             this.confirm_button = ((!(val==this.categoryName)) ? false : true) || (val.length ? false : true)
         }
     },
     mounted() {
-        this.getThemeListFormServer();
+        this.fetchServerData()
     },
     methods: {
         fetchData(callback,params={}){
             let defaultParams = {
                 pageSize: this.pageSize,
                 pageIndex: this.pageIndex,
-                pid: this.theme_select,
+                // pid: this.theme_select,
                 type: 1,
                 name: this.search_input
             };
