@@ -121,8 +121,7 @@ export default {
 	height:700px;
 	margin-left:120px;
 	margin-right:120px;
-	
-	border:1px solid black;
+	background:white;
 }
 
 .left-container{

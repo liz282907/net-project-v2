@@ -6,6 +6,7 @@
 import {keyword} from "../assets/js/keyword.js";
 
 export default {
+	name:"EvolveExport",
 	props:["id"],
 	components: {
 

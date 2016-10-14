@@ -82,6 +82,7 @@ app.post("/keyword/loadKeyword",function(req,res){
 app.post("/keyword/loadBaseword",function(req,res){
     var temp = JSON.parse(fs.readFileSync("./json/diwei.json"));
     res.json(temp);
+});
 
 app.get("/topic",function(req,res){
   var data = JSON.parse(fs.readFileSync('./mock/topic.json'));

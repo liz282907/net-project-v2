@@ -36,24 +36,25 @@
 </template>
 
 <script>
-import Pagination from "../components/Pagination/pagination";
+import Pagination from "../components/Pagination/pagination.vue";
 
 export default {
+    name:"EvolveAnalysis",
 	props:["id"],
-	components:{
-		"pagination": Pagination
-	},
-
 	data () {
-	return {
-		totalSize:50,
-		transformedWordList:{},
-		searchContent:"",
-		paginationFlag:false
-	}
+        return {
+            totalSize:50,
+            transformedWordList:{},
+            searchContent:"",
+            paginationFlag:false
+        }
 	},
 	computed:{
 
+	},
+
+    components:{
+		"pagination":Pagination
 	},
 	
 	watch:{
@@ -72,7 +73,8 @@ export default {
 	},
   
   created:function(){
-		loadData(this,{});		
+		loadData(this,{});
+  },		
 
   components: {
 
