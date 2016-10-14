@@ -96,6 +96,30 @@
 			"date":"2016-09-03",
 			"event":"习近平f",
 			"route":  "test"
+		},
+		{
+			"id":9,
+			"name":"低危词",
+			"sensitivity":"30%",
+			"searchNum":333,
+			"hitNum":129,
+			"hitRate":"0.1234563",
+			"trend":"增长",
+			"date":"2016-09-03",
+			"event":"习近平f",
+			"route":  "test"
+		},
+		{
+			"id":10,
+			"name":"低危词",
+			"sensitivity":"30%",
+			"searchNum":333,
+			"hitNum":129,
+			"hitRate":"0.1234563",
+			"trend":"增长",
+			"date":"2016-09-03",
+			"event":"习近平f",
+			"route":  "test"
 		}
 	]
 }

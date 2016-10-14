@@ -113,10 +113,14 @@ export default {
 <style>
 /*container*/
 #evolve-main{
-	width:1366px;
+/*	width:1366px;
 	height:700px;
 	margin-left:auto;
-	margin-right:auto;
+	margin-right:auto;*/
+	min-width:1366px;
+	height:700px;
+	margin-left:120px;
+	margin-right:120px;
 	
 	border:1px solid black;
 }
@@ -140,7 +144,7 @@ export default {
 
 /*title*/
 .title-container{
-	border:1px solid gray;
+	border:1px solid #999d9c;
 }
 
 .title-div{
@@ -149,7 +153,7 @@ export default {
 	font-family:"黑体";
 	color:white;
 	
-	background:black;
+	background:#3f3f3f;
 }
 
 .topic-div{
