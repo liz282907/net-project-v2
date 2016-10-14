@@ -329,7 +329,17 @@ export default {
         this.$set(this.keywordList,index,updatedRow);
     },
 
+    validateAudit(){
+
+    },
+
     audit(row,state,index){
+
+        if(row.category.length<=0) {
+            this.showMessage("请至少选择一个分类","warning");
+            this.editKeyword(index);
+            return;
+        }
 
         //更新列表
         this.updateTableRow(index,'state',auditStates.filter(stateObj=> stateObj.id===state)[0]);
@@ -338,18 +348,33 @@ export default {
             keywords: row.keyword,
             state
         }
+
         this.sendAuditPost(postObj,function(){
             this.$set(this.keywordList,index,prevRow);
         });
+
 
     },
 
     /* 批量更改 */
     auditBatch(state){
 
+        /*待做分类check*/
+
+        {
+            //检查是否有分类未选中，更人性的是高亮改行。todo
+            const validateAudit = this.keywordList.filter(row=>{
+                return (this.tableSelection.indexOf(row) && row.state.id===2)
+            }).every(row=> row.category.length>0);
+
+            if(!validateAudit){
+                this.showMessage("您有关键词未选择分类","warning");
+                return;
+            }
+        }
+
         const prevKeywordList = this.keywordList;
         const keywords = this.tableSelection.map(row=> row.keyword );
-
         const postObj = {
             keywords,
             state

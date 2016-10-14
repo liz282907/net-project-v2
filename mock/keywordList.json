@@ -21,7 +21,7 @@
         "inputTime": "2016-09-04 08:23",
         "auditTime": "",
         "source": "张三",
-        "category": [4,3],
+        "category": [],
         "state": {"zh_name":"未审核","id":2}
     },
     {
