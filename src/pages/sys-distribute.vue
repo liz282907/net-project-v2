@@ -6,6 +6,7 @@
             <el-table
                 :data="systemList"
                 border
+                stripe
                 style="width: 100%">
                 <el-table-column
                     property="id"
