@@ -76,10 +76,6 @@ export default {
 		loadData(this,{});
   },		
 
-  components: {
-
-  },
-
   mounted:function(){
 		console.log(this.transformedWordList);
   }
