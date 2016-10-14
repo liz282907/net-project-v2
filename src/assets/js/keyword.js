@@ -383,11 +383,7 @@ var keyword = function(option){
 						url:"/keyword/loadBaseword",
 						type:"post",
 						data:{
-							pageSize:10,
-							pageIndex:1,
-							category:"low danger",
-							orderBy: "freq", 
-							desc: true,
+							id:_id
 						},
 						success:function(d){
 							textareaList[i].val(textareaList[i].val()+d.wordList.join(" ")+" ");
