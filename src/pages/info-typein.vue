@@ -29,6 +29,7 @@
                           :multiple="true"
                           :on-preview="handlePreview"
                           :on-remove="handleRemove"
+                          :before-upload = "saveFileData"
                           :on-success="handleUploadState.bind(this,'success')"
                           :on-error="handleUploadState.bind(this,'error')"
                         >
@@ -67,6 +68,7 @@ export default {
         userChoice:{
             chosenCategories: [],
             chosenTopic: '',
+            file:""
         },
 
 
@@ -84,6 +86,11 @@ export default {
     handlePreview(file) {
         console.log(file);
     },
+    saveFileData(file){
+        console.log("--------before upload----",file);
+        // debugger;
+    },
+
     handleUploadState(state){
         if(state==="success")
             this.showMessage("文件上传成功","success");

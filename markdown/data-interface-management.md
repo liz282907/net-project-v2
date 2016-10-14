@@ -8,6 +8,7 @@
 ### 获取用户权限
 
 这部分接口已有吗？还是在登录的时候已经全局获取到了
+登录时获取
 
 ### 获取分类
 
@@ -22,7 +23,7 @@ method: "get"
 
 ```
 [
-    {"zh_name": "全部", "id": 1},
+    {"zh_name": "全部", "id": 1},           // -1
     {"zh_name": "出访", "id": 2},
     {"zh_name": "下基层", "id": 3},
     {"zh_name": "讲话", "id": 4},
@@ -39,10 +40,10 @@ method: "get"
 url: yoursite.com/management/keywordList
 method: "get"
 params:{
-    userid: 1,        //要么？
+    userid: 1,        //要么？       //yes
     pageSize:50,
     pageIndex:1,
-    topic: "习近平"
+    topic: "习近平"                          // id
     filterCategory:1,
     filterContent: 1,   //显示内容：全部|未审核|已通过|未通过
     searchSelect: "keyword"|"source" 搜索的限定，关键词|来源
@@ -54,7 +55,7 @@ params:{
 
 ```
 {
-    "totalCount": 400,
+    "totalCount": 400,              //totalSize 页码数
     "keywordList": [
     {
         "keyword": "习近平",
