@@ -73,6 +73,9 @@ export default {
   
   created:function(){
 		loadData(this,{});		
+
+  components: {
+
   },
 
   mounted:function(){

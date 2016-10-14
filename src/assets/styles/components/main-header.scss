@@ -6,6 +6,7 @@ $base-color: #3F3F3F;
     width: 100%;
     background-color: $base-color;
     padding: 0 120px;
+    min-width: 1000px;
     font-size: 14px;
 
     .logo,.nav{
@@ -31,24 +32,32 @@ $base-color: #3F3F3F;
     vertical-align: middle;
     margin-top: 12px;
 }
-.nav{
-    .nav-item{
-        float: left;
-        padding: 0 20px;
-        a{
-          color: rgba(255,255,255,0.45);
-          font: 14px "Microsoft Yahei";
-        }
-        .router-link-active{
-          color: #fff;
-        }
+.nav-item{
+    float: left;
+    padding: 0 20px;
+    a{
+      color: rgba(255,255,255,0.45);
+      font: 14px "Microsoft Yahei";
+    }
+    .router-link-active{
+      color: #fff;
     }
 }
 
 .user-photo{
-  &:before{
+  position: relative;
+  color: $white;
+  cursor: pointer;
+  &:after{
     position: absolute;
-    content: attr
+    top: 0;
+    transform: translateY(-50%);
+    right: 0;
+    content: url(./assets/images/arrow-down.png);
+    width: 7px;
+    height: 7px;
+    display: inline-block;
+
   }
 }
 

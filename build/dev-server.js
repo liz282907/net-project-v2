@@ -2,6 +2,7 @@ var path = require('path')
 var express = require('express')
 var webpack = require('webpack')
 var config = require('../config')
+var fs = require('fs')
 var opn = require('opn')
 var proxyMiddleware = require('http-proxy-middleware')
 var webpackConfig = process.env.NODE_ENV === 'testing'
@@ -81,6 +82,38 @@ app.post("/keyword/loadKeyword",function(req,res){
 app.post("/keyword/loadBaseword",function(req,res){
     var temp = JSON.parse(fs.readFileSync("./json/diwei.json"));
     res.json(temp);
+
+app.get("/topic",function(req,res){
+  var data = JSON.parse(fs.readFileSync('./mock/topic.json'));
+  res.json(data);
+});
+
+app.post("/upload",function(req,res){
+  var data = JSON.parse(fs.readFileSync('./mock/topic.json'));
+  res.json(data);
+});
+
+app.get("/management/category",function(req,res){
+  var data = JSON.parse(fs.readFileSync('./mock/category.json'));
+  res.json(data);
+});
+
+app.get("/management/keywordList",function(req,res){
+  var data = JSON.parse(fs.readFileSync('./mock/keywordList.json'));
+  res.json(data);
+});
+
+app.post("/management/audit",function(req,res){
+  var data = JSON.stringify({msg: "success"});
+  res.json(data);
+});
+app.post("/management/delete",function(req,res){
+  var data = JSON.stringify({msg: "success"});
+  res.json(data);
+});
+app.post("/management/update",function(req,res){
+  var data = JSON.stringify({msg: "success"});
+  res.json(data);
 });
 
 module.exports = app.listen(port, function (err) {

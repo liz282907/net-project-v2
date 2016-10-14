@@ -7,15 +7,18 @@
         </li>
       </ul>
     <div class="header-right clearfix">
-      <span class="nav-item user-photo" data-imgsrc="">
+      <span class="nav-item user-photo">
           luchen
       </span>
+      <ul class="dropdown">
+         <!-- <li>退出</li>   -->
+      </ul>
     </div>
   </div>
 </template>
 
 <script>
-import navList from '../../../utils/constants';
+import { navList } from '../../../utils/constants';
 
 
 export default {

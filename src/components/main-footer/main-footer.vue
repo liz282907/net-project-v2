@@ -21,6 +21,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
 .footer{
 	background:#F7F7F7;
 	padding:50px 0 50px 0;
@@ -29,4 +30,5 @@ export default {
 	margin-top:30px;
 	text-align:center;
 }
+
 </style>
