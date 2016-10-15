@@ -58,7 +58,7 @@
 
         <el-dialog :title="dialogTitle" v-model="dialogFormVisible">
             <el-form label-width="80px">
-                <el-form-item label="主题">
+                <!-- <el-form-item label="主题">
                     <el-select v-model="theme_select" :disabled="!shouldCategoryAdd">
                         <el-option
                             v-for="item in themeList"
@@ -66,7 +66,7 @@
                             :value="item.id">
                         </el-option>
                     </el-select>
-                </el-form-item>
+                </el-form-item> -->
                 <el-form-item label="分类名称">
                     <el-input v-model="input_name" style="width: 100%"></el-input>
                 </el-form-item>
@@ -189,7 +189,6 @@ export default {
         saveCategoryToServer() {
             this.$http.post("/sysmgr/dict/save", {
                 id: this.categoryId,
-                pid: this.theme_select,
                 name: this.input_name,
                 type: 1
             }).then((response) => {

@@ -75,7 +75,7 @@
                 label="操作"
                 width="145">
             <div style="text-align: center">
-                <el-button type="primary" icon="edit" @click.native="editClick(row)">
+                <el-button type="primary" icon="edit" @click.native="editClick(row, $index)">
                 </el-button>
                 <el-button type="danger" icon="delete" @click.native="userDeleteSingle(row.id, row.name)"></el-button>
             </div>
@@ -98,16 +98,16 @@
         <el-dialog :title="dialogTitle" v-model="dialogFormVisible">
             <el-form :model="formAlignRight" label-width="80px">
             <el-form-item label="用户名">
-                <el-input v-model="formAlignRight.name" :disabled="!shouldUserAdd"></el-input>
+                <el-input v-model="formAlignRight.name"></el-input>
             </el-form-item>
             <el-form-item label="组织">
-                <el-input v-model="formAlignRight.org_type" :disabled="!shouldUserAdd"></el-input>
+                <el-input v-model="formAlignRight.org_type"></el-input>
             </el-form-item>
             <el-form-item label="单位">
-                <el-input v-model="formAlignRight.org" :disabled="!shouldUserAdd"></el-input>
+                <el-input v-model="formAlignRight.org"></el-input>
             </el-form-item>
             <el-form-item label="职位">
-                <el-input v-model="formAlignRight.desc" :disabled="!shouldUserAdd"></el-input>
+                <el-input v-model="formAlignRight.desc"></el-input>
             </el-form-item>
             <el-form-item label="权限">
                 <el-select v-model="formAlignRight.auth">
@@ -122,7 +122,7 @@
 
             <span slot="footer" class="dialog-footer">
                 <el-button @click.native="dialogCancel">取 消</el-button>
-                <el-button type="primary" @click.native="dialogConfirm" :disabled="formAlignRight.auth===auth">确 定</el-button>
+                <el-button type="primary" @click.native="dialogConfirm">确 定</el-button>
             </span>
         </el-dialog>
 
@@ -167,7 +167,8 @@ export default {
               }
             ],
             auth: '',
-            shouldUserAdd: true
+            shouldUserAdd: true,
+            curIndex: 1
         }
     },
     components: {
@@ -228,8 +229,8 @@ export default {
             this.dialogFormVisible = false;
             this.$http.post("/sysmgr/account/save",{
                 name: this.formAlignRight.name,
-                org_type: this.formAlignRight.organization_type,
-                org: this.formAlignRight.organization,
+                org_type: this.formAlignRight.org_type,
+                org: this.formAlignRight.org,
                 desc: this.formAlignRight.desc,
                 auth: this.formAlignRight.auth
             })
@@ -245,17 +246,20 @@ export default {
 
             });
         },
-        editAuthorityToServer() {
+        editAccountToServer() {
             this.dialogFormVisible = false;
             this.$http.post("sysmgr/account/save",{
                 id: this.formAlignRight.id,
-                auth: this.formAlignRight.auth
+                auth: this.formAlignRight.auth,
+                org: this.formAlignRight.org,
+                org_type: this.formAlignRight.org_type,
+                desc: this.formAlignRight.desc
             })
             .then((response) => {
                 console.log('change authority success!')
                 this.$notify({
                     title: '消息',
-                    message: '更新权限成功',
+                    message: '更新用户信息成功',
                     type: 'success'
                 });
                 this.fetchServerData()
@@ -358,15 +362,16 @@ export default {
                 })
             })
         },
-        editClick: function(row) {
+        editClick: function(row, index) {
             this.dialogTitle = '权限修改'
             this.dialogFormVisible = true;
             this.shouldUserAdd = false;
+            this.curIndex = index;
             this.formAlignRight = {
                 id: row.id,
                 name: row.name,
-                organization_type: row.organization_type,
-                organization: row.organization,
+                org_type: row.org_type,
+                org: row.org,
                 desc: row.desc,
                 auth: row.auth
             }
@@ -374,7 +379,35 @@ export default {
             this.auth = row.auth; //给confirm按钮状态用
         },
         dialogConfirm: function() {
-            this.shouldUserAdd ? this.addAccountToServer() : this.editAuthorityToServer()
+            // this.shouldUserAdd ? this.addAccountToServer() : this.editAuthorityToServer()
+            var editAccount = {
+                id: this.accountList[this.curIndex].id,
+                name: this.accountList[this.curIndex].name,
+                org_type: this.accountList[this.curIndex].org_type,
+                org: this.accountList[this.curIndex].org,
+                desc: this.accountList[this.curIndex].desc,
+                auth: this.accountList[this.curIndex].auth
+            };
+
+            if(this.shouldUserAdd) { // 用户添加
+                this.addAccountToServer();
+            } else { // 用户编辑
+                if ((editAccount.name===this.formAlignRight.name) &&
+                    (editAccount.org_type===this.formAlignRight.org_type) &&
+                    (editAccount.org===this.formAlignRight.org) &&
+                    (editAccount.desc===this.formAlignRight.desc) &&
+                    (editAccount.auth===this.formAlignRight.auth)) {
+                        // 数据未变
+                        this.$message({
+                            type: 'info',
+                            message: '数据未发生变更'
+                        })
+                        this.dialogFormVisible = false;
+                        return;
+                } else {
+                    this.editAccountToServer();
+                }
+            }
         },
         dialogCancel: function() {
             this.dialogFormVisible = false;

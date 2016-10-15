@@ -145,7 +145,7 @@ export default {
         themeAdd: function() {
             this.dialogTitle = '主题添加';
             this.input_name = '';
-            this.themeId = '';
+            this.themeId = null;
             this.dialogFormVisible = true;
             this.shouldThemeAdd = true;
             this.type = 0;
