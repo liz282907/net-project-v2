@@ -1,6 +1,6 @@
 <template>
 
-   <div class="typein-container"  v-loading.fullscreen="fullscreenLoading">
+   <div class="typein-container"  v-loading.fullscreen="fullscreenLoading" v-if="canBeMounted">
         <div class="typein-nav">
             <!-- 当tab数目多时，建议用路由配置+子组件，tab动态渲染v-for -->
              <el-tabs>
@@ -8,7 +8,7 @@
                     <div class="filter-topic form-item">
                         <span class="tag-key">主题</span>
                         <el-radio-group v-model="userChoice.chosenTopic" size="small">
-                          <el-radio-button v-for="topic in topics"  :label="topic"></el-radio-button>
+                          <el-radio-button v-for="topic in topics"  :label="topic.id">{{topic.name}}</el-radio-button>
                         </el-radio-group>
                     </div>
                     <div class="filter-category form-item">
@@ -16,7 +16,7 @@
                         <el-select v-model="userChoice.chosenCategories" multiple size="small">
                             <el-option
                               v-for="item in categories"
-                              :label="item.zh_name"
+                              :label="item.name"
                               :value="item.id">
                             </el-option>
                         </el-select>
@@ -26,7 +26,8 @@
                         <el-upload
                           action="/upload"
                           type="drag"
-                          :multiple="true"
+                          accept =".xlsx,.doc,.txt,.xls,.docx"
+                          :multiple="false"
                           :on-preview="handlePreview"
                           :on-remove="handleRemove"
                           :before-upload = "saveFileData"
@@ -35,13 +36,13 @@
                         >
                           <i class="el-icon-upload"></i>
                           <div class="el-dragger__text">将文件拖到此处，或<em>点击上传</em></div>
-                          <div class="el-upload__tip" slot="tip">只能上传txt文件</div>
+                          <div class="el-upload__tip" slot="tip">仅可以接受.doc,.docx,.xls,.xlsx,.txt格式的文件</div>
                         </el-upload>
                     </div>
 
                     <div class="button-group form-item">
-                        <el-button size="small">取消</el-button>
-                        <el-button type="primary" size="small" @click.native="typeinWords">上传</el-button>
+                        <el-button size="small" >取消</el-button>
+                        <el-button type="primary" size="small" :disabled="isUploadDisabled" @click.native="typeinWords">上传</el-button>
                     </div>
 
 
@@ -63,16 +64,32 @@ export default {
 
   data(){
     return {
-        topics: [],
-        categories: [],
+        // topics: this.$parent.subjects,
+        // categories: this.$parent.categories,
         userChoice:{
             chosenCategories: [],
-            chosenTopic: '',
+            chosenTopic: -1,
             file:""
         },
 
 
         fullscreenLoading: false
+    }
+  },
+
+  computed:{
+    topics(){
+        return this.$parent.subjects;
+    },
+
+    categories(){
+        return this.$parent.categories.slice(1);
+    },
+    canBeMounted(){
+      return (this.topics && this.categories && this.topics.length>0 && this.categories.length>0);
+    },
+    isUploadDisabled(){
+      return this.userChoice.chosenTopic===-1 || this.userChoice.chosenCategories.length<=0;
     }
   },
 
@@ -84,11 +101,21 @@ export default {
         console.log(file, fileList);
     },
     handlePreview(file) {
-        console.log(file);
+        this.showMessage("文件上传成功","success");
     },
+
+    // validateBeforeUpload(){
+
+    //   if(this.userChoice.chosenTopic===-1 || this.userChoice.chosenCategories.length<=0){
+    //     this.showMessage("请选择分类及主题","error");
+    //     return false;
+    //   }
+    //   return true;
+    // },
+
     saveFileData(file){
-        console.log("--------before upload----",file);
-        // debugger;
+        this.userChoice.file = file;
+        // return false;
     },
 
     handleUploadState(state){
@@ -98,8 +125,14 @@ export default {
             this.showMessage("文件上传失败","error");
     },
     typeinWords(){
-        this.$http.post(urls.typein,this.userChoice)
+
+        if(this.isUploadDisabled) {
+          this.showMessage("请选择分类及主题","error");
+          return;
+        }
+        this.$http.post(urls.upload,this.userChoice)
                     .then(response=>{
+                      //文件预览
                         this.showMessage("关键词录入成功","success")
                     })
                     .catch(err=>{
