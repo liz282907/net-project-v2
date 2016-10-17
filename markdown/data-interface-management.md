@@ -15,15 +15,18 @@
 #### request
 
 ```
-url: yoursite.com/management/category
+url: yoursite.com/management/subject
 method: "get"
+{
+    type = 0    // 参数type  0|1|2 ->  主题|分类|专题
+}
 ```
 
 #### response
 
 ```
 [
-    {"zh_name": "全部", "id": 1},           // -1
+    {"zh_name": "全部", "id": -1},          
     {"zh_name": "出访", "id": 2},
     {"zh_name": "下基层", "id": 3},
     {"zh_name": "讲话", "id": 4},
