@@ -45,11 +45,11 @@ export default {
     console.log("---------app.vue created------------");
     let topicPromise = this.$http.get(urls.topic,{params: {type: 0}})
         .then(response=>{
-          this.subjects = response.body;
+          this.subjects = response.body.subjectList;
         });
     let categoryPromise = this.$http.get(urls.category,{params: {type: 1}})
         .then(response=>{
-          this.categories = response.body;
+          this.categories = response.body.categoryList;
         });
     Promise.all([topicPromise,categoryPromise]).then(response=> {
         console.log("app.vue获取数据成功");

@@ -61,7 +61,7 @@ var staticPath = path.posix.join(config.dev.assetsPublicPath, config.dev.assetsS
 app.use(staticPath, express.static('./static'))
 
 
-app.get("/subject",function(req,res){
+app.get("/sysmgr/dict/query",function(req,res){
   var data;
   if(parseInt(req.query.type)===0)
     data = JSON.parse(fs.readFileSync('./mock/topic.json'));
@@ -70,7 +70,7 @@ app.get("/subject",function(req,res){
   res.json(data);
 });
 
-app.post("/upload",function(req,res){
+app.post("/sample/upload",function(req,res){
   var data = JSON.parse(fs.readFileSync('./mock/topic.json'));
   res.json(data);
 });
@@ -80,20 +80,20 @@ app.post("/upload",function(req,res){
 //   res.json(data);
 // });
 
-app.get("/management/keywordList",function(req,res){
+app.get("/sample/list",function(req,res){
   var data = JSON.parse(fs.readFileSync('./mock/keywordList.json'));
   res.json(data);
 });
 
-app.post("/management/audit",function(req,res){
+app.post("/sample/audit",function(req,res){
   var data = JSON.stringify({msg: "success"});
   res.json(data);
 });
-app.post("/management/delete",function(req,res){
+app.post("/sample/delete",function(req,res){
   var data = JSON.stringify({msg: "success"});
   res.json(data);
 });
-app.post("/management/update",function(req,res){
+app.post("/sample/update",function(req,res){
   var data = JSON.stringify({msg: "success"});
   res.json(data);
 });

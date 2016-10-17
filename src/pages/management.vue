@@ -146,10 +146,10 @@
         <!-- 一种是model为keywordList[curIndex],一种是form然后更新某一行-->
         <el-dialog title="编辑关键词" v-model="dialog.dialogFormVisible" size="tiny">
           <el-form :model="dialog.form">
-            <el-form-item label="关键词" :label-width="dialog.formLabelWidth">
+            <el-form-item label="关键词" label-width="200">
               <el-input v-model="dialog.form.keyword" auto-complete="off"></el-input>
             </el-form-item>
-            <el-form-item label="分类" label-width="dialog.formLabelWidth">
+            <el-form-item label="分类" label-width="200">
               <el-select v-model="dialog.form.category" placeholder="请选择分类" multiple>
                 <el-option :label="item.name" v-for="item in categories.slice(1)" :value="item.id"></el-option>
               </el-select>
