@@ -36,4 +36,12 @@ var keywordList = [
     }
 ]
 
-export default keywordList;
+var topics = [
+    {"name": "习近平", "id": 1},
+    {"name": "彭丽媛", "id": 2},
+    {"name": "习家人", "id": 3},
+    {"name": "工作人员", "id": 4},
+    {"name": "习明泽","id": 5}
+];
+
+export { keywordList, topics } ;
