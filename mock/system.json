@@ -1,0 +1,29 @@
+{
+    "systemList": [
+        {
+            "id": 1,
+            "name": "九宫格",
+            "abbr": "jgg",
+            "url": "http://111.202.27.164:8017/keyword_to_jgg"
+        },
+        {
+            "id": 2,
+            "name": "计算所",
+            "abbr": "jss",
+            "url": "http://111.202.27.164:8017/keyword_to_jss"
+        },
+        {
+            "id": 3,
+            "name": "鹰击鹰眼",
+            "abbr": "yjyj",
+            "url": "http://111.202.27.164:8017/keyword_to_yjyj"
+        },
+        {
+            "id": 4,
+            "name": "九宫格",
+            "abbr": "jgg",
+            "url": "http://111.202.27.164:8017/keyword_to_jgg"
+        }
+    ],
+    "totalSize": 20
+}
