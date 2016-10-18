@@ -25,7 +25,7 @@
 
                     <div class="tag-value">
                         <ul class="tag-expand clearfix">
-                            <li v-for="item in categories" :key="item" :class="[ 'tag', { active: item.id===filterCategory }]"
+                            <li v-for="item in categories" :key="item" :class="[ 'tag', { active: parseInt(item.id)===filterCategory }]"
                                 @click="setFilter('filterCategory',item.id)">
                             {{item.name}}</li>
                         </ul> <span class="tag-more">展开<i class="iconfont arrow-closed"></i></span>
@@ -319,7 +319,6 @@ export default {
 
     /* 点击筛选条件的tag时设置active同时获取列表*/
     setFilter(key,item){
-        debugger;
         this[key] = parseInt(item);
         this.fetchKeywordList();
     },
@@ -355,13 +354,17 @@ export default {
         let params = Object.assign({},this.queryObj,updatedQuery);
 
         this.$http.get(urls.keywordList,{params: params}).then(response=>{
+
+            // debugger;
+
             this.fullscreenLoading = false;
             ({totalSize : this.totalSize,keywordList : this.keywordList} = response.body);
             //维护keywordList是否在编辑状态
             this.isEditingArr = new Array(this.keywordList.length).fill(false);
+            console.log("keywordList",this.keywordList);
         }).catch(err=>{
             //web notification
-
+            console.log("error in keywordList",err);
             this.fullscreenLoading = false;
             this.$message({
               message: '获取关键词列表失败',

@@ -15,7 +15,7 @@
                         <span class="tag-key">分类</span>
                         <el-select v-model="userChoice.chosenCategories" multiple size="small">
                             <el-option
-                              v-for="item in categories.slice(1)"
+                              v-for="item in categories"
                               :label="item.name"
                               :value="item.id">
                             </el-option>
@@ -27,6 +27,7 @@
                           action="/sample/upload"
                           type="drag"
                           accept =".xlsx,.doc,.txt,.xls,.docx"
+                          :data="userChoice"
                           :multiple="false"
                           :on-preview="handlePreview"
                           :on-remove="handleRemove"
@@ -42,7 +43,12 @@
 
                     <div class="button-group form-item">
                         <el-button size="small" >取消</el-button>
-                        <el-button type="primary" size="small" :disabled="isUploadDisabled" @click.native="typeinWords">上传</el-button>
+
+                        <el-tooltip class="item" effect="dark" content="请确保分类及主题已选择" placement="top-start">
+                            <el-button type="primary" size="small" :disabled="isUploadDisabled" @click.native="typeinWords">上传</el-button>
+                        </el-tooltip>
+
+
                     </div>
 
 
@@ -73,12 +79,12 @@ export default {
         // categories: this.$parent.categories,
         userChoice:{
             chosenCategories: [],
-            chosenTopic: -1,
-            file:""
+            chosenTopic: -1
         },
         topics:[],
         categories:[],
-        fullscreenLoading: false
+        fullscreenLoading: false,
+        // uploadFunc: null,
     }
   },
 
@@ -93,10 +99,20 @@ export default {
     canBeMounted(){
       return (this.topics && this.categories && this.topics.length>0 && this.categories.length>0);
     },
+
     isUploadDisabled(){
       return this.userChoice.chosenTopic===-1 || this.userChoice.chosenCategories.length<=0;
     }
   },
+
+  // events:{
+  //   "upload":function(){
+  //     console.log("----------被触发了----");
+  //     debugger;
+  //     if(this.uploadFunc)
+  //       this.uploadFunc();
+  //   }
+  // },
 
   methods:{
     showMessage(message,type){
@@ -123,8 +139,13 @@ export default {
       // formData.append("chosenTopic",this.userChoice.chosenTopic);
       // formData.append("file",this.userChoice.chosenCategories);
 
-        this.userChoice.file = file;
-        return false;
+        // this.userChoice.file = file;
+        const that = this;
+        return new Promise((resolve,reject)=>{
+            // that.uploadFunc = resolve;
+            console.log("--------",this.userChoice);
+            that.$once("upload",resolve);
+        });
     },
 
     handleUploadState(state){
@@ -137,9 +158,13 @@ export default {
 
         if(this.isUploadDisabled) {
           this.showMessage("请选择分类及主题","error");
+
           return;
         }
 
+        this.$emit("upload");
+
+/*
         const formData = new FormData();
         Object.keys(this.userChoice).forEach(key=>{
           formData.append(key,this.userChoice[key]);
@@ -154,6 +179,7 @@ export default {
                         console.log(" 关键词录入失败 ",err);
                         this.showMessage("关键词录入失败","error");
                     })
+                    */
     }
   },
 
