@@ -23,12 +23,13 @@ export default {
 <style scoped>
 
 .footer{
-	background:#F7F7F7;
+	background:#F4F4F4;
 	padding:50px 0 50px 0;
 	font-size:0.8rem;
 	font-family:"黑体";
-	margin-top:30px;
 	text-align:center;
+	min-width:1366px;
+	padding-top:50px;
 }
 
 </style>

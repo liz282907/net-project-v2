@@ -68,7 +68,7 @@ export default {
 			loadData(this,{pageIndex:page});
 		},
 		search_keydown:function(){
-			alert(this.searchContent);
+			loadData(this,{filter:this.searchContent});
 		}
 	},
   
@@ -82,14 +82,20 @@ export default {
 }
 
 function loadData(vm,o){
-	vm.$http.post('keyword/hitRate',{
-		topic: vm.id,
-		pageSize:10,
-		pageIndex:o.pageIndex || 1,
-		orderBy: o.orderBy || "all",
-		range:"all",
-		desc: true
-	}).then((response) => {
+	//vm.$http.get('keyword/hitRate',
+    vm.$http.get('sampleKeyword/list',
+        {
+            params:{
+                subjectId: vm.id,
+                pageSize:10,
+                pageIndex:o.pageIndex || 1,
+                orderBy: o.orderBy || "all",
+                range:"all",
+                desc: true,
+                filter:o.filter || ""
+            }
+        }
+    ).then((response) => {
 		// success callback
 		vm.transformedWordList = response.body["wordList"];
 		vm.totalSize = response.body["totalSize"];

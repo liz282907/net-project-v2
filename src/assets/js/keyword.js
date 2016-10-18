@@ -44,13 +44,14 @@ var keyword = function(option){
 	function load_data(){
 		$.ajax({
 			url:"/keyword/loadKeyword",
-			type:"post",
+			type:"get",
+			dataType:'json',
 			data:{
 				id:_id
 			},
 			success:function(tempData){
-				var name = tempData.name;
-				var data = tempData.data;
+				var name = tempData.keywordPackage.name;
+				var data = tempData.keywordPackage.data;
 				
 				$("#keyword_name").val(name);
 				for(var i=0;i<data.length;i++){
@@ -107,13 +108,17 @@ var keyword = function(option){
 			$.ajax({
 				url:"/keyword/saveKeyword",
 				type:"post",
-				data:{
+				contentType:'application/json',
+				data:JSON.stringify({
 					id:_id,
 					keywordPackage: tempObject,
 					system:choseSystem.split(" ")
-				},
+				}),
 				success:function(d){
-					alert("保存数据成功");
+					if(d.flag)
+						alert("保存数据成功");
+					else
+						alert("保存数据错误");
 				},
 				error:function(){
 					alert("保存数据错误");
@@ -161,17 +166,21 @@ var keyword = function(option){
 		}
 		
 		tempObject.data = temp;
-		
+
 		$.ajax({
 			url:"/keyword/saveKeyword",
 			type:"post",
-			data:{
+			contentType:'application/json; charset=utf-8',
+			data:JSON.stringify({
 				id:_id,
 				keywordPackage: tempObject,
 				system:[]
-			},
+			}),
 			success:function(d){
-				alert("保存数据成功");
+				if(d.flag)
+					alert("保存数据成功");
+				else
+					alert("保存数据错误");
 			},
 			error:function(){
 				alert("保存数据错误");
@@ -186,7 +195,7 @@ var keyword = function(option){
 			var keywordList = _row[i].total()["关键词"];
 			var keyword_outList = _row[i].total()["去除词"];
 			for(var j=0;j<keywordList.length;j++){
-				contentTemp = comb(contentTemp,keywordList[j].split(" "));
+				contentTemp = comb(contentTemp,keywordList[j]);
 			};
 			//contentTemp = out_keyword(contentTemp,keyword_outList.split(" "));
 			temp = temp + contentTemp.join("\n") + "\n";
@@ -271,7 +280,7 @@ var keyword = function(option){
 		
 		this.total = function(){
 			var temp = {};
-			temp["去除词"] = td_keyword_out[0].childNodes[0].value;
+			temp["去除词"] = combWord(td_keyword_out[0].childNodes[0].value);
 			temp["关键词"] = k.total();
 			return temp;
 		}
@@ -370,7 +379,7 @@ var keyword = function(option){
 		function turn(el){
 			for(var i = 0;i<textareaList.length;i++){
 				if(textareaTurnList[i][0] === el){
-					var mode = new chose_mode(["衍生方法1","衍生方法2","衍生方法3"],textareaList[i].val(),textareaList[i]);
+					var mode = new chose_mode(["衍生方法1","衍生方法2","衍生方法3"],combWord(textareaList[i].val()),textareaList[i]);
 					break;
 				}
 			}
@@ -381,7 +390,8 @@ var keyword = function(option){
 				if(textareaAddList[i][0] === el){
 					$.ajax({
 						url:"/keyword/loadBaseword",
-						type:"post",
+						type:"get",
+						dataType:'json',
 						data:{
 							id:_id
 						},
@@ -426,10 +436,11 @@ var keyword = function(option){
 				$.ajax({
 					url:"/keyword/turnKeyword",
 					type:"post",
-					data:{
+					contentType:'application/json',
+					data:JSON.stringify({
 						mode:choseMode,
 						keyword:oldKeyword
-					},
+					}),
 					success:function(d){
 						textareaChanged.val(d);
 					},
@@ -443,7 +454,7 @@ var keyword = function(option){
 		this.total = function(){
 			var temp = [];
 			for(var i=0;i<textareaList.length;i++){
-				temp.push(textareaList[i].val());
+				temp.push( combWord(textareaList[i].val()) );
 			}
 			return temp;
 		}
@@ -471,6 +482,40 @@ var keyword = function(option){
 			}
 		}
 	}
+}
+
+function combWord(str){
+	var flag = 0;
+	var temp = "";
+	var arr_temp = [];
+	for(var i=0;i<str.length;i++){
+		if(str[i] == "“" || str[i] == "'"){
+			temp = "" + str[i];
+			flag = 1;
+		}else{
+			if(flag == 1){
+				if(str[i] != "”" || str[i] == "'")
+					temp = temp + str[i];
+				else{
+					if(temp != "")
+						arr_temp.push(temp + str[i]);
+					temp = "";
+					flag = 0;
+				}
+			}else{
+				if(str[i] == " "){
+					if(temp != "")
+						arr_temp.push(temp);
+					temp = "";
+				}else{
+					temp = temp + str[i];
+				}
+			}			
+		}		
+	}
+	if(temp != "")
+		arr_temp.push(temp);
+	return arr_temp;
 }
 
 function simpPYStr(){

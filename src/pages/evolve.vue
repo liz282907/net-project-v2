@@ -52,7 +52,7 @@ export default {
 
 		}).then((response) => {
 			// success callback
-			temp = response.body;
+			temp = response.body.titleList;
 			for(var key in temp){
 				temp[key].showflag = false;
 				for(var topic in temp[key].children){
@@ -91,6 +91,10 @@ export default {
 				this.topicCurrent = "";
 		},
 		tab_click:function(tab,tabList){
+			if(tab.name != "关键词配置" && this.topicCurrent == ""){
+				alert("请选择专题");
+				return;
+			}				
 			for(var key in tabList){
 				tabList[key].isCurrent = false;
 			}
@@ -113,14 +117,7 @@ export default {
 <style>
 /*container*/
 #evolve-main{
-/*	width:1366px;
 	height:700px;
-	margin-left:auto;
-	margin-right:auto;*/
-	min-width:1366px;
-	height:700px;
-	margin-left:120px;
-	margin-right:120px;
 	background:white;
 }
 

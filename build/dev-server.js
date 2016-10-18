@@ -69,17 +69,21 @@ app.post("/keyword/turnKeyword",function(req,res){
     res.json(temp);
 });
 
-app.post("/keyword/hitRate",function(req,res){
+app.post("/keyword/saveKeyword",function(req,res){
+
+})
+
+app.get("/sampleKeyword/list",function(req,res){
     var temp = JSON.parse(fs.readFileSync("./json/evolve_hitrate.json"));
     res.json(temp);
 });
 
-app.post("/keyword/loadKeyword",function(req,res){
+app.get("/keyword/loadKeyword",function(req,res){
     var temp = JSON.parse(fs.readFileSync("./json/daoru.json"));
     res.json(temp);
 });
 
-app.post("/keyword/loadBaseword",function(req,res){
+app.get("/keyword/loadBaseword",function(req,res){
     var temp = JSON.parse(fs.readFileSync("./json/diwei.json"));
     res.json(temp);
 });

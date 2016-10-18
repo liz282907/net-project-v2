@@ -45,6 +45,6 @@ totalRoute.route = [...totalRoute.route,evolveRoute, sysManageRoute];
 
 
 // homePage
-totalRoute.route.push({path: '*', redirect: '/management'});
+totalRoute.route.push({path: '*', redirect: '/evolve'});
 
 export default totalRoute.route;
