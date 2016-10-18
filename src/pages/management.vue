@@ -1,5 +1,5 @@
 <template>
-    <div class="manage-container" v-loading.fullscreen="fullscreenLoading" v-if="canBeMounted">
+    <div class="manage-container" v-loading.fullscreen="fullscreenLoading" >
         <div class="filter-part">
             <el-breadcrumb separator="/" class="filter-breadcrumb">
                 <el-breadcrumb-item>全部</el-breadcrumb-item>
@@ -187,6 +187,18 @@ export default {
 
   created(){
     //fetch subject and category
+
+  },
+
+  beforeMount(){
+    console.log("management will mount");
+
+  },
+  mounted(){
+
+    // console.log("management  mounted");
+    // this.fullscreenLoading = true;
+
     this.fullscreenLoading = true;
     let topicPromise = this.$http.get(urls.topic,{params: {type: 0}})
         .then(response=>{
@@ -203,18 +215,6 @@ export default {
           console.log("获取数据失败");
 
         });
-  },
-
-  beforeMount(){
-    console.log("management will mount");
-
-  },
-  mounted(){
-
-    // console.log("management  mounted");
-    // this.fullscreenLoading = true;
-
-    // this.fetchKeywordList();
   },
 
   data(){
@@ -358,7 +358,9 @@ export default {
             // debugger;
 
             this.fullscreenLoading = false;
-            ({totalSize : this.totalSize,keywordList : this.keywordList} = response.body);
+            // ({totalSize : this.totalSize,keywordList : this.keywordList} = response.body);
+            this.totalSize = response.body.totalSize;
+            this.keywordList = response.body.keywordList;
             //维护keywordList是否在编辑状态
             this.isEditingArr = new Array(this.keywordList.length).fill(false);
             console.log("keywordList",this.keywordList);
