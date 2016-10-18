@@ -105,14 +105,6 @@ export default {
     }
   },
 
-  // events:{
-  //   "upload":function(){
-  //     console.log("----------被触发了----");
-  //     debugger;
-  //     if(this.uploadFunc)
-  //       this.uploadFunc();
-  //   }
-  // },
 
   methods:{
     showMessage(message,type){
@@ -135,17 +127,17 @@ export default {
     // },
 
     saveFileData(file){
-      // formData.append("chosenCategories",this.userChoice.chosenCategories);
-      // formData.append("chosenTopic",this.userChoice.chosenTopic);
-      // formData.append("file",this.userChoice.chosenCategories);
 
+        // debugger;
+        // console.log(file);
         // this.userChoice.file = file;
+        // return false;
+
         const that = this;
         return new Promise((resolve,reject)=>{
-            // that.uploadFunc = resolve;
-            console.log("--------",this.userChoice);
             that.$once("upload",resolve);
         });
+
     },
 
     handleUploadState(state){
@@ -170,7 +162,9 @@ export default {
           formData.append(key,this.userChoice[key]);
         });
 
-        this.$http.post(urls.upload,formData)
+
+        console.log("dffff",this.userChoice);
+        this.$http.post(urls.upload,JSON.stringify(this.userChoice))
                     .then(response=>{
                       //文件预览
                         this.showMessage("关键词录入成功","success")
@@ -179,7 +173,7 @@ export default {
                         console.log(" 关键词录入失败 ",err);
                         this.showMessage("关键词录入失败","error");
                     })
-                    */
+*/
     }
   },
 
@@ -189,17 +183,21 @@ export default {
 
     let promises = [urls.topic,urls.category].map((url,index)=> this.$http.get(url,{params:{type:index}}));
 
+    const that = this;
+
     Promise.all(promises).then(results=>{
-        this.fullscreenLoading = false;
-        [this.topics, this.categories] = results.map(result=>{
-          const key = Object.keys(result.body).filter(key=>key.searchList!==-1)[0];
+        that.fullscreenLoading = false;
+
+        [that.topics, that.categories] = results.map(result=>{
+          const key = Object.keys(result.body).filter(key=>key.search(/List/)!==-1)[0];
           return result.body[key];
         });
 
     }).catch(reasons=>{
-        this.fullscreenLoading = false;
-        this.showMessage("oops,获取信息失败","error");
         console.log(reasons);
+        that.fullscreenLoading = false;
+        that.showMessage("oops,获取信息失败","error");
+
     });
   }
 };

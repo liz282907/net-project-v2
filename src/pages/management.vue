@@ -14,8 +14,8 @@
                 <el-breadcrumb-item>
                     <el-input placeholder="请输入内容" v-model.trim="searchInput" style="width: 300px;" @keyup.native.13="fetchKeywordList">
                         <el-select v-model="searchSelect" slot="prepend">
-                            <el-option label="关键词" value="keyword" selected></el-option>
-                            <el-option label="来源" value="source"></el-option>
+                            <el-option label="关键词" value="keyword" ></el-option>
+                            <el-option label="来源" value="source" ></el-option>
                         </el-select>
                     </el-input>
                 </el-breadcrumb-item>
@@ -84,13 +84,15 @@
                 <el-table-column property="source" label="来源" ></el-table-column>
                 <el-table-column  inline-template label="分类" >
                     <div>
-                        <ul v-show="!isEditingArr[$index]">
-                            <el-tag v-for="item in row.category" class="inner-tag">{{categoryDict[item]}}</el-tag>
+                        <ul v-show="true">
+                            <el-tag v-for="item in row.categories" class="inner-tag">{{categoryDict[item]}}</el-tag>
                         </ul>
-                        <el-select v-model="row.category" multiple v-show="isEditingArr[$index]" class="dropdown-cell">
-                            <el-option v-for="item in categories" :label="item.zh_name" :value="item.id">
+                        <!--
+                        <el-select v-model="row.categories" multiple v-show="isEditingArr[$index]" class="dropdown-cell">
+                            <el-option v-for="item in categories" :label="item.name" :value="item.id">
                             </el-option>
                         </el-select>
+                        -->
                     </div>
                 </el-table-column>
                 <el-table-column  label="状态"  inline-template width="100">
@@ -98,7 +100,7 @@
                 </el-table-column>
                 <el-table-column inline-template label="操作">
                     <div>
-                        <div v-show="!isEditingArr[$index]">
+                        <div v-show="true">
                             <div v-if="isAdmin && row.status===0" class="buttongroup-wrapper">
                                 <el-button-group class="action-group">
                                   <el-button type="primary" icon="edit" @click.native="editKeyword($index)" size="mini"></el-button>
@@ -150,9 +152,11 @@
               <el-input v-model="dialog.form.keyword" auto-complete="off"></el-input>
             </el-form-item>
             <el-form-item label="分类" label-width="200">
+
               <el-select v-model="dialog.form.category" placeholder="请选择分类" multiple>
-                <el-option :label="item.name" v-for="item in categories.slice(1)" :value="item.id"></el-option>
+                <el-option :label="item.name" v-for="item in categories" :value="item.id"></el-option>
               </el-select>
+
             </el-form-item>
           </el-form>
           <span slot="footer" class="dialog-footer">
@@ -187,7 +191,7 @@ export default {
 
   created(){
     //fetch subject and category
-
+    // !isEditingArr[$index]
   },
 
   beforeMount(){
@@ -206,7 +210,8 @@ export default {
         });
     let categoryPromise = this.$http.get(urls.category,{params: {type: 1}})
         .then(response=>{
-          this.categories = response.body.categoryList;
+          this.categories = [{"name":"全部","id":-1,"type":1},...response.body.categoryList];
+
         });
     Promise.all([topicPromise,categoryPromise]).then(response=> {
         this.fetchKeywordList();
@@ -353,7 +358,7 @@ export default {
 
         let params = Object.assign({},this.queryObj,updatedQuery);
 
-        this.$http.get(urls.keywordList,{params: params}).then(response=>{
+        this.$http.get(urls.keywordList,{params: params}).then((response)=>{
 
             // debugger;
 
@@ -364,15 +369,16 @@ export default {
             //维护keywordList是否在编辑状态
             this.isEditingArr = new Array(this.keywordList.length).fill(false);
             console.log("keywordList",this.keywordList);
-        }).catch(err=>{
-            //web notification
+        }, (err)=>{
             console.log("error in keywordList",err);
             this.fullscreenLoading = false;
             this.$message({
               message: '获取关键词列表失败',
               type: 'error'
             });
-        });
+        }).catch(err=>{
+            console.log("---------catch",err);
+        })
     },
 
     sendAuditPost(receivedObj,cb){
@@ -407,7 +413,8 @@ export default {
 
     audit(row,status,index){
 
-        if(row.category.length<=0) {
+        const that = this;
+        if(row.categories.length<=0) {
             this.showMessage("请至少选择一个分类","warning");
             this.editKeyword(index);
             return;
@@ -422,7 +429,7 @@ export default {
         }
 
         this.sendAuditPost(postObj,function(){
-            this.$set(this.keywordList,index,prevRow);
+            that.$set(this.keywordList,index,prevRow);
         });
 
 
@@ -433,10 +440,11 @@ export default {
 
         /*待做分类check*/
 
+        const that = this;
         const notAuditedArr = this.tableSelection.filter(row=> row.status===0);
         {
             //检查是否有分类未选中，更人性的是高亮改行。todo
-            debugger;
+            // debugger;
 
             // let notAuditedArr = this.keywordList.filter(row=>{
             //     console.log("row ",this.tableSelection.indexOf(row));
@@ -444,7 +452,7 @@ export default {
             // });
 
             if(notAuditedArr.length<=0) return;
-            const validateAudit = notAuditedArr.every(row=> row.category.length>0);
+            const validateAudit = notAuditedArr.every(row=> row.categories.length>0);
 
             if(!validateAudit){
                 this.showMessage("您有关键词未选择分类","warning");
@@ -460,7 +468,7 @@ export default {
         };
 
         this.sendAuditPost(postObj,function(){
-            this.keywordList = prevKeywordList;
+            that.keywordList = prevKeywordList;
         });
         // const updatedState = auditStates.filter(stateObj=> stateObj.id===state)[0];
         this.keywordList.forEach((row,index)=>{
@@ -473,11 +481,12 @@ export default {
     /* 全部更改 */
     auditAll(status){
         //未更改的keywordList
+        const that = this;
         const prevKeywordList = this.keywordList;
 
         this.sendAuditPost({status},function(){
             //失败则回退到原来的状态
-            this.keywordList = prevKeywordList;
+            that.keywordList = prevKeywordList;
         });
 
         this.tableSelection = this.keywordList;

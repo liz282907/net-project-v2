@@ -40,11 +40,30 @@ module.exports = {
     //     exclude: /node_modules/
     //   }
     // ],
+    // vue:{
+    //   loaders:{
+    //     js:'babel',
+    //   }
+    // },
+
     loaders: [
       {
         test: /\.vue$/,
         loader: 'vue'
       },
+      // {
+      //   test: /\.vue$/,
+      //   loader: 'babel',
+      //   query:{
+      //     presets:['es2015','stage-2','stage-3'],
+      //     "plugins": [
+      //         "transform-es2015-destructuring",
+      //         "transform-es2015-parameters",
+      //         // "syntax-export-extensions",
+      //         // "transform-es2015-spread"
+      //         ]
+      //     }
+      // },
       {
         test: /\.js$/,
         loader: 'babel',
