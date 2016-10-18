@@ -35,11 +35,12 @@ export default {
   },
   data(){
     return {
-      subjects:[],
-      categories:[],
+      // subjects:[],
+      // categories:[],
       // fullscreenLoading: false
     }
   },
+  /*
   created(){
     //fetch subject and category
     console.log("---------app.vue created------------");
@@ -59,6 +60,7 @@ export default {
 
         });
   },
+  */
   beforeMount(){
     console.log("---------app.vue beforeMount------------");
   },

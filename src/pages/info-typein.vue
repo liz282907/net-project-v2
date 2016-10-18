@@ -1,6 +1,6 @@
 <template>
 
-   <div class="typein-container"  v-loading.fullscreen="fullscreenLoading" v-if="canBeMounted">
+   <div class="typein-container"  v-loading.fullscreen="fullscreenLoading" >
         <div class="typein-nav">
             <!-- 当tab数目多时，建议用路由配置+子组件，tab动态渲染v-for -->
              <el-tabs>
@@ -15,7 +15,7 @@
                         <span class="tag-key">分类</span>
                         <el-select v-model="userChoice.chosenCategories" multiple size="small">
                             <el-option
-                              v-for="item in categories"
+                              v-for="item in categories.slice(1)"
                               :label="item.name"
                               :value="item.id">
                             </el-option>
@@ -62,6 +62,11 @@ export default {
   components: {
   },
 
+  created(){
+    //fetch subject and category
+
+  },
+
   data(){
     return {
         // topics: this.$parent.subjects,
@@ -71,20 +76,20 @@ export default {
             chosenTopic: -1,
             file:""
         },
-
-
+        topics:[],
+        categories:[],
         fullscreenLoading: false
     }
   },
 
   computed:{
-    topics(){
-        return this.$parent.subjects;
-    },
+    // topics(){
+    //     return this.$parent.subjects;
+    // },
 
-    categories(){
-        return this.$parent.categories.slice(1);
-    },
+    // categories(){
+    //     return this.$parent.categories.slice(1);
+    // },
     canBeMounted(){
       return (this.topics && this.categories && this.topics.length>0 && this.categories.length>0);
     },
@@ -156,12 +161,15 @@ export default {
     //fetch topic + category
     this.fullscreenLoading = true;
 
-    let promises = [urls.topic,urls.category].map(url=> this.$http.get(url));
+    let promises = [urls.topic,urls.category].map((url,index)=> this.$http.get(url,{params:{type:index}}));
 
     Promise.all(promises).then(results=>{
         this.fullscreenLoading = false;
-        [this.topics, this.categories] = results.map(result=>result.data);
-        // debugger;
+        [this.topics, this.categories] = results.map(result=>{
+          const key = Object.keys(result.body).filter(key=>key.searchList!==-1)[0];
+          return result.body[key];
+        });
+
     }).catch(reasons=>{
         this.fullscreenLoading = false;
         this.showMessage("oops,获取信息失败","error");

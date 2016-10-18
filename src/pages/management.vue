@@ -164,7 +164,7 @@
 </template>
 
 <script>
-import {topics} from '../../utils/mock.js';
+// import {topics} from '../../utils/mock.js';
 import { urls, statusDict } from '../../utils/constants.js';
 
 
@@ -186,7 +186,23 @@ export default {
   },
 
   created(){
-    console.log("management created");
+    //fetch subject and category
+    this.fullscreenLoading = true;
+    let topicPromise = this.$http.get(urls.topic,{params: {type: 0}})
+        .then(response=>{
+          this.topics = response.body.subjectList;
+        });
+    let categoryPromise = this.$http.get(urls.category,{params: {type: 1}})
+        .then(response=>{
+          this.categories = response.body.categoryList;
+        });
+    Promise.all([topicPromise,categoryPromise]).then(response=> {
+        this.fetchKeywordList();
+      })
+        .catch(err=>{
+          console.log("获取数据失败");
+
+        });
   },
 
   beforeMount(){
@@ -195,19 +211,10 @@ export default {
   },
   mounted(){
 
-    //showLoading
-    console.log("management  mounted");
-    this.fullscreenLoading = true;
+    // console.log("management  mounted");
+    // this.fullscreenLoading = true;
 
-    this.fetchKeywordList();
-/*
-    this.$http.get(urls.category).then(response=>{
-        this.categories = response.body;
-        debugger;
-        console.log(response.body);
-        this.fetchKeywordList({filterCategory: response.body[0].id});
-    });
-*/
+    // this.fetchKeywordList();
   },
 
   data(){
@@ -225,11 +232,14 @@ export default {
 
         curTopic: "习近平",
         // topics: this.$parent.subjects,
+        topics: [],
+        categories: [],
         searchInput: '',
         searchSelect: 'keyword',
         filterCategory: -1,
         filterContent: -1,
         // categories: this.$parent.categories,
+
         statusDict,
         keywordList: [] ,
         isAdmin: true,
@@ -247,13 +257,13 @@ export default {
 
   computed: {
 
-        topics(){
-            return this.$parent.subjects;
-        },
+        // topics(){
+        //     return this.$parent.subjects;
+        // },
 
-        categories(){
-            return this.$parent.categories;
-        },
+        // categories(){
+        //     return this.$parent.categories;
+        // },
 
         curUserId(){
             return 1;
