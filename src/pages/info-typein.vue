@@ -24,7 +24,7 @@
                     <div class="file-upload form-item">
                         <span class="tag-key">关键词</span>
                         <el-upload
-                          action="/upload"
+                          action="/sample/upload"
                           type="drag"
                           accept =".xlsx,.doc,.txt,.xls,.docx"
                           :multiple="false"
@@ -114,8 +114,12 @@ export default {
     // },
 
     saveFileData(file){
+      // formData.append("chosenCategories",this.userChoice.chosenCategories);
+      // formData.append("chosenTopic",this.userChoice.chosenTopic);
+      // formData.append("file",this.userChoice.chosenCategories);
+
         this.userChoice.file = file;
-        // return false;
+        return false;
     },
 
     handleUploadState(state){
@@ -130,7 +134,13 @@ export default {
           this.showMessage("请选择分类及主题","error");
           return;
         }
-        this.$http.post(urls.upload,this.userChoice)
+
+        const formData = new FormData();
+        Object.keys(this.userChoice).forEach(key=>{
+          formData.append(key,this.userChoice[key]);
+        });
+
+        this.$http.post(urls.upload,formData)
                     .then(response=>{
                       //文件预览
                         this.showMessage("关键词录入成功","success")
