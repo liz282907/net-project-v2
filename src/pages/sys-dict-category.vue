@@ -118,9 +118,9 @@ export default {
                 that.fetchServerData()
             }, 500)
         },
-        theme_select: function() {
-            this.fetchServerData()
-        },
+        // theme_select: function() {
+        //     this.fetchServerData()
+        // },
         ids: function(val) {
             this.deleteAll = val.length>1
         },
@@ -152,7 +152,7 @@ export default {
         fetchServerData() {
             this.accountList = [];
             this.fetchData(function(response) {
-                this.categoryList = response.data.themeList;
+                this.categoryList = response.data.subjectList;
                 this.totalSize = response.data.totalSize;
             })
         },
@@ -165,7 +165,7 @@ export default {
                 }
             })
             .then((response) => {
-                this.themeList = response.data.themeList;
+                this.themeList = response.data.subjectList;
                 this.fetchServerData()
             }, (response) => {
 

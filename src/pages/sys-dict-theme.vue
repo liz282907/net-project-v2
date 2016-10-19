@@ -109,7 +109,7 @@ export default {
         fetchServerData() {
             this.systemList = [];
             this.fetchData(function(response) {
-                this.themeList = response.data.themeList;
+                this.themeList = response.data.subjectList;
                 this.totalSize = response.data.totalSize;
             })
         },
