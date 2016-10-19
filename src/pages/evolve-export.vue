@@ -224,6 +224,14 @@ input[type=checkbox]{
 	-webkit-appearance: checkbox;
 }
 
+input[type=radio]{
+	width:20px;
+	height:20px;
+	
+	vertical-align:middle;
+	-webkit-appearance: radio;
+}
+
 .left{
 	float:left;
 }

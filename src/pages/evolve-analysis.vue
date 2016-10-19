@@ -86,13 +86,11 @@ function loadData(vm,o){
     vm.$http.get('sampleKeyword/list',
         {
             params:{
-                subjectId: vm.id,
+                topicId: vm.id,
                 pageSize:10,
                 pageIndex:o.pageIndex || 1,
                 orderBy: o.orderBy || "all",
-                range:"all",
-                desc: true,
-                filter:o.filter || ""
+                searchInput:o.filter || ""
             }
         }
     ).then((response) => {

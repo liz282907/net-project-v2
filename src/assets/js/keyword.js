@@ -115,6 +115,8 @@ var keyword = function(option){
 					system:choseSystem.split(" ")
 				}),
 				success:function(d){
+					if(typeof(d) == "string")
+						d = JSON.parse(d);
 					if(d.flag)
 						alert("保存数据成功");
 					else
@@ -177,6 +179,8 @@ var keyword = function(option){
 				system:[]
 			}),
 			success:function(d){
+				if(typeof(d) == "string")
+					d = JSON.parse(d);
 				if(d.flag)
 					alert("保存数据成功");
 				else
@@ -287,7 +291,7 @@ var keyword = function(option){
 		
 		this.load_data = function(data){
 			k.load_data(data["关键词"]);
-			td_keyword_out[0].childNodes[0].value = data["去除词"];
+			td_keyword_out[0].childNodes[0].value = data["去除词"].join(" ");
 		}
 		
 		this.updataNum = function(num){
@@ -379,7 +383,7 @@ var keyword = function(option){
 		function turn(el){
 			for(var i = 0;i<textareaList.length;i++){
 				if(textareaTurnList[i][0] === el){
-					var mode = new chose_mode(["衍生方法1","衍生方法2","衍生方法3"],combWord(textareaList[i].val()),textareaList[i]);
+					var mode = new chose_mode([{text:"衍生方法1",value:1},{text:"衍生方法2",value:2},{text:"衍生方法3",value:4}],combWord(textareaList[i].val()),textareaList[i]);
 					break;
 				}
 			}
@@ -408,14 +412,14 @@ var keyword = function(option){
 		}
 		
 		function chose_mode(mode,oldKeyword,textareaChanged){
-			var choseMode = "";
+			var choseMode = [];
 			
 			var bg = $("<div class='tip-bg'></div>");
 			var tip = $("<div class='tip'><div id='button_cancle' class='tip-button'>取消</div><div id='button_ok' class='tip-button'>确定</div></div>");
 			
 			var modeList = [];
 			for(var i=0;i<mode.length;i++){
-				modeList.push($("<input type='checkbox' name='chose_mode' value='"+mode[i]+"'>"+mode[i]+"</input></br>"))
+				modeList.push($("<input type='checkbox' name='chose_mode' value='"+mode[i].value+"'>"+mode[i].text+"</input></br>"))
 				tip.append(modeList[i]);
 			}
 			
@@ -428,7 +432,8 @@ var keyword = function(option){
 			$("#button_ok").on("click",function(){
 				for(var i=0;i<modeList.length;i++){
 					if(modeList[i].is(':checked')){
-						choseMode = choseMode + modeList[i].val() + " ";
+						//choseMode = choseMode + modeList[i].val() + " ";
+						choseMode.push(mode[i].value);
 					};
 				}
 				bg.remove();
@@ -462,10 +467,10 @@ var keyword = function(option){
 		this.load_data = function(data){
 			for(var i=0;i<data.length;i++){
 				if(textareaList[i]){
-					textareaList[i].val(data[i]);
+					textareaList[i].val(data[i].join(" "));
 				}else{
 					if(addTextarea()){
-						textareaList[i].val(data[i]);
+						textareaList[i].val(data[i].join(" "));
 					}
 				}
 			}

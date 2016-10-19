@@ -70,7 +70,7 @@ app.post("/keyword/turnKeyword",function(req,res){
 });
 
 app.post("/keyword/saveKeyword",function(req,res){
-
+    res.json({flag:true});
 })
 
 app.get("/sampleKeyword/list",function(req,res){
