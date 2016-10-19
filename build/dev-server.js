@@ -73,7 +73,7 @@ app.post("/keyword/saveKeyword",function(req,res){
     res.json({flag:true});
 })
 
-app.get("/sampleKeyword/list",function(req,res){
+app.get("/keyword/list",function(req,res){
     var temp = JSON.parse(fs.readFileSync("./json/evolve_hitrate.json"));
     res.json(temp);
 });

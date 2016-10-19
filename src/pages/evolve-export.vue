@@ -8,27 +8,51 @@ import {keyword} from "../assets/js/keyword.js";
 export default {
 	name:"EvolveExport",
 	props:["id"],
+	data () {
+        return {
+			export_system:[]
+        }
+	},
 	components: {
 
 	},
 	mounted:function(){
-		creat_keyword(this.id);
+		this.$http.get('sysmgr/distribute/query',
+			{
+				params:{
+					pageSize:100,
+					pageIndex: 1,
+				}
+			}
+		).then((response) => {
+			// success callback
+			this.export_system = response.body["systemList"];
+			var o = {
+				"container":"keyword",
+				"id":this.id,
+				"export_system":this.export_system
+			}
+			creat_keyword(o);	
+		}, (response) => {
+			// error callback
+		});
 	},
 	methods:{
 		
 	},
 	watch:{
 		"id":function(){
-			creat_keyword(this.id);
+			var o = {
+				"container":"keyword",
+				"id":this.id,
+				"export_system":this.export_system
+			}
+			creat_keyword(o);
 		}
 	}
 };
 
-function creat_keyword(id){
-	var o = {
-		"container":"keyword",
-		"id":id
-	}
+function creat_keyword(o){	
 	keyword(o);
 }
 </script>

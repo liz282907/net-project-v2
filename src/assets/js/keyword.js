@@ -5,8 +5,8 @@ var keyword = function(option){
 	var _id = option.id || "";
 	var _rowNum = 0;
 	var _row = [];
-	var _system = option.export_system || ["九宫格","计算所"];
-	var choseSystem = "";
+	var _system = option.export_system;
+	var choseSystem = [];
 	
 	(function _init(){
 		var c = $("#"+_container);
@@ -66,14 +66,14 @@ var keyword = function(option){
 	}
 	
 	function config_keyword(){
-		choseSystem = "";
+		choseSystem = [];
 			
 		var bg = $("<div class='tip-bg'></div>");
 		var tip = $("<div class='tip'><div id='button_cancle' class='tip-button'>取消</div><div id='button_ok' class='tip-button'>确定</div></div>");
 		
 		var sysList = [];
 		for(var i=0;i<_system.length;i++){
-			sysList.push($("<input type='checkbox' name='chose_mode' value='"+_system[i]+"'>"+_system[i]+"</input></br>"))
+			sysList.push($("<input type='checkbox' name='chose_mode' value='"+_system[i].id+"'>"+_system[i].name+"</input></br>"))
 			tip.append(sysList[i]);
 		}
 		
@@ -86,22 +86,32 @@ var keyword = function(option){
 		$("#button_ok").on("click",function(){
 			for(var i=0;i<sysList.length;i++){
 				if(sysList[i].is(':checked')){
-					choseSystem = choseSystem + sysList[i].val() + " ";
+					choseSystem.push(_system[i]);
 				};
 			}
-			$("#show_sys").text("（已选系统："+ choseSystem+"）");
+
+			var temp = "";
+			for(var i=0;i<choseSystem.length;i++){
+				temp = temp + choseSystem[i].name + " ";
+			}
+			$("#show_sys").text("（已选系统："+ temp +"）");
 			bg.remove();
 		});
 	}
 	
 	function export_system_keyword(){
-		if(choseSystem == "")
+		if(choseSystem.length == 0)
 			alert("请配置下发系统");
 		else{
 			var tempObject = {};
 			var temp = [];
 			for(var i=0;i<_row.length;i++){
 				temp.push(_row[i].total());
+			}
+
+			var tempSystem = [];
+			for(var i=0;i<choseSystem.length;i++){
+				tempSystem.push(choseSystem[i].id);
 			}
 			
 			tempObject.data = temp;
@@ -112,7 +122,7 @@ var keyword = function(option){
 				data:JSON.stringify({
 					id:_id,
 					keywordPackage: tempObject,
-					system:choseSystem.split(" ")
+					system:tempSystem
 				}),
 				success:function(d){
 					if(typeof(d) == "string")
@@ -447,7 +457,7 @@ var keyword = function(option){
 						keyword:oldKeyword
 					}),
 					success:function(d){
-						textareaChanged.val(d);
+						textareaChanged.val(d.join(" "));
 					},
 					error:function(){
 						alert("生成衍生词错误");
