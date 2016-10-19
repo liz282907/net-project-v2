@@ -2,17 +2,27 @@
 
     <div class="sys-container">
         <aside class="sys-aside">
-            <el-menu default-active="/sys-management/account" :router="true"  @open="handleopen" @close="handleclose" theme="dark">
-              <el-menu-item index="/sys-management/account">账号管理
+            <el-menu default-active="/sys-management/account" :router="true" theme="dark">
+              <el-menu-item index="/sys-management/account">
+                账号管理
              </el-menu-item>
-              <el-submenu index="/sys-management/dict-theme">
+              <!-- <el-submenu index="2">
                 <template slot="title">字典管理</template>
-                <el-menu-item index="/sys-management/dict-theme">主题
+                <el-menu-item index="/sys-management/dict-theme">
+                  主题
                 </el-menu-item>
-                  <el-menu-item index="/sys-management/dict-category">分类
+                  <el-menu-item index="/sys-management/dict-category">
+                    分类
                   </el-menu-item>
-              </el-submenu>
-              <el-menu-item index="/sys-management/system">分发系统
+              </el-submenu> -->
+              <el-menu-item index="/sys-management/dict-theme">
+                主题管理
+              </el-menu-item>
+              <el-menu-item index="/sys-management/dict-category">
+                分类管理
+              </el-menu-item>
+              <el-menu-item index="/sys-management/system">
+                分发系统
               </el-menu-item>
             </el-menu>
         </aside>
@@ -36,6 +46,9 @@ export default {
             console.log("index",index);
             console.log("indexPath",indexPath);
         }
+    },
+    mounted() {
+
     }
 };
 </script>

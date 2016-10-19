@@ -8,20 +8,27 @@ const navList = [
 
 const serverPath = '';
 const urls = {
-    'category': serverPath + '/management/category',
-    'topic': serverPath + '/topic',
-    'keywordList': serverPath + '/management/keywordList',
-    'audit': serverPath + '/management/audit',
-    'delete': serverPath + '/management/delete',
-    'update': serverPath + '/management/update',
-    'upload': serverPath + '/upload',
-    'typein': serverPath + '/typein',
+    'category': serverPath + '/sysmgr/dict/query',
+    'topic': serverPath + '/sysmgr/dict/query',
+    'keywordList': serverPath + '/sample/list',
+    'audit': serverPath + '/sample/audit',
+    'delete': serverPath + '/sample/delete',
+    'update': serverPath + '/sample/update',
+    'upload': serverPath + '/sample/upload',
+    // 'typein': serverPath + '/typein',
 };
 const auditStates = [
-    {zh_name: '全部', id: 1},
-    {zh_name: '未审核', id: 2},
-    {zh_name: '已通过', id: 3},
-    {zh_name: '已拒绝', id: 4}
+    {zh_name: '全部', id: -1},
+    {zh_name: '未审核', id: 0},
+    {zh_name: '已通过', id: 1},
+    {zh_name: '已拒绝', id: 2}
 ];
 
-export { navList, urls , auditStates};
+const statusDict = {
+    '-1':'全部',
+    '0': '未审核',
+    '1': '已通过',
+    '2': '已拒绝'
+};
+
+export { navList, urls , statusDict,auditStates};

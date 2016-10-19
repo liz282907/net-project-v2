@@ -88,38 +88,61 @@ app.get("/keyword/loadBaseword",function(req,res){
     res.json(temp);
 });
 
-app.get("/topic",function(req,res){
+app.get("/sysmgr/dict/query",function(req,res){
+  var data;
+  if(parseInt(req.query.type)===0)
+    data = JSON.parse(fs.readFileSync('./mock/topic.json'));
+  else if(parseInt(req.query.type)===1)
+    data = JSON.parse(fs.readFileSync('./mock/category.json'));
+  res.json(data);
+});
+
+app.post("/sample/upload",function(req,res){
   var data = JSON.parse(fs.readFileSync('./mock/topic.json'));
   res.json(data);
 });
 
-app.post("/upload",function(req,res){
-  var data = JSON.parse(fs.readFileSync('./mock/topic.json'));
-  res.json(data);
-});
+// app.get("/subject?type=1",function(req,res){
+//   var data = JSON.parse(fs.readFileSync('./mock/category.json'));
+//   res.json(data);
+// });
 
-app.get("/management/category",function(req,res){
-  var data = JSON.parse(fs.readFileSync('./mock/category.json'));
-  res.json(data);
-});
-
-app.get("/management/keywordList",function(req,res){
+app.get("/sample/list",function(req,res){
   var data = JSON.parse(fs.readFileSync('./mock/keywordList.json'));
   res.json(data);
 });
 
-app.post("/management/audit",function(req,res){
+app.post("/sample/audit",function(req,res){
   var data = JSON.stringify({msg: "success"});
   res.json(data);
 });
-app.post("/management/delete",function(req,res){
+app.post("/sample/delete",function(req,res){
   var data = JSON.stringify({msg: "success"});
   res.json(data);
 });
-app.post("/management/update",function(req,res){
+app.post("/sample/update",function(req,res){
   var data = JSON.stringify({msg: "success"});
   res.json(data);
 });
+app.get("/sysmgr/account/query",function(req,res){
+    var accountList = JSON.parse(fs.readFileSync("./mock/account.json"));
+    res.json(accountList);
+});
+
+app.get("/sysmgr/distribute/query", function(req,res){
+    var systemList = JSON.parse(fs.readFileSync("./mock/system.json"));
+    res.json(systemList);
+});
+
+app.get("/sysmgr/dict/query", function(req,res){
+    var themeList = JSON.parse(fs.readFileSync("./mock/theme.json"));
+    res.json(themeList);
+})
+
+app.get("/sysmgr/dict-category/query", function(req,res){
+    var categoryList = JSON.parse(fs.readFileSync("./mock/category_yezi.json"));
+    res.json(categoryList);
+})
 
 module.exports = app.listen(port, function (err) {
   if (err) {
