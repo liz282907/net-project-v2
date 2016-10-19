@@ -132,7 +132,8 @@ export default {
         // console.log(file);
         // this.userChoice.file = file;
         // return false;
-
+        if(file)
+          this.showMessage("文件上传成功","success");
         const that = this;
         return new Promise((resolve,reject)=>{
             that.$once("upload",resolve);
@@ -142,9 +143,9 @@ export default {
 
     handleUploadState(state){
         if(state==="success")
-            this.showMessage("文件上传成功","success");
+            this.showMessage("关键词录入成功","success");
         else
-            this.showMessage("文件上传失败","error");
+            this.showMessage("关键词录入失败","error");
     },
     typeinWords(){
 

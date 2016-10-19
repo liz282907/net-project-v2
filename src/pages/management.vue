@@ -4,7 +4,7 @@
             <el-breadcrumb separator="/" class="filter-breadcrumb">
                 <el-breadcrumb-item>全部</el-breadcrumb-item>
                 <el-breadcrumb-item class="topic-menu">
-                    {{curTopic}}
+                    {{curTopic.name}}
                     <i class="iconfont"></i>
                     <ul class="clearfix topic-submenu">
                         <li class="topic-item" v-for="topic in topics"
@@ -84,15 +84,9 @@
                 <el-table-column property="source" label="来源" ></el-table-column>
                 <el-table-column  inline-template label="分类" >
                     <div>
-                        <ul v-show="true">
+                        <ul>
                             <el-tag v-for="item in row.categories" class="inner-tag">{{categoryDict[item]}}</el-tag>
                         </ul>
-                        <!--
-                        <el-select v-model="row.categories" multiple v-show="isEditingArr[$index]" class="dropdown-cell">
-                            <el-option v-for="item in categories" :label="item.name" :value="item.id">
-                            </el-option>
-                        </el-select>
-                        -->
                     </div>
                 </el-table-column>
                 <el-table-column  label="状态"  inline-template width="100">
@@ -153,7 +147,7 @@
             </el-form-item>
             <el-form-item label="分类" label-width="200">
 
-              <el-select v-model="dialog.form.category" placeholder="请选择分类" multiple>
+              <el-select v-model="dialog.form.categories" placeholder="请选择分类" multiple>
                 <el-option :label="item.name" v-for="item in categories" :value="item.id"></el-option>
               </el-select>
 
@@ -230,7 +224,7 @@ export default {
             formLabelWidth: 200,
             form: {
                 keyword: '',
-                category: []
+                categories: []
             },
             curIndex: null
         },
@@ -424,7 +418,7 @@ export default {
         this.updateTableRow(index,'status',status);
         // this.updateTableRow(index,'status',auditStates.filter(stateObj=> stateObj.id===state)[0]);
         const postObj = {
-            keywords: row.keyword,
+            keywords: [row.keyword],
             status,
         }
 
@@ -517,7 +511,7 @@ export default {
         // let formData = this.dialog.form;
         // ({ keyword: formData.keyword,category:formData.category} = curRowData);
         this.dialog.form.keyword= curRowData.keyword;
-        this.dialog.form.category = curRowData.category;
+        this.dialog.form.categories = curRowData.categories.slice(1);
         this.dialog.curIndex = index;
         // this.change2EditState(index,true);
         // this.$set(this.isEditingArr,index,true);
@@ -528,29 +522,30 @@ export default {
         this.dialog.dialogFormVisible = false
         //post
         /* 更新前的数据 */
-        const {keyword,category} = this.keywordList[this.dialog.curIndex],
+        const {keyword,categories} = this.keywordList[this.dialog.curIndex],
               index = this.dialog.curIndex;
 
 
         /* 无效请求，词或分类没有变更时*/
         if( keyword===this.dialog.form.keyword &&
-            JSON.stringify(this.dialog.form.category.sort())===JSON.stringify(category.sort()))
+            JSON.stringify(this.dialog.form.categories.sort())===JSON.stringify(categories.sort()))
             return;
         this.$http.post(urls.update,{
+            userId: this.curUserId,
             prevWord: keyword,
             newWord: this.dialog.form.keyword,
-            category: this.dialog.form.category
+            categories: this.dialog.form.categories
         }).then(response=>{
             this.showMessage("更新成功","success");
 
             this.updateTableRow(index,'keyword',this.dialog.form.keyword);
-            this.updateTableRow(index,'category',this.dialog.form.category);
+            this.updateTableRow(index,'categories',this.dialog.form.categories);
 
         }).catch(err=>{
             this.showMessage("更新失败","error");
 
             this.updateTableRow(index,'keyword',keyword);
-            this.updateTableRow(index,'category',category);
+            this.updateTableRow(index,'categories',categories);
 
         })
     },
