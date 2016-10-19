@@ -4,9 +4,9 @@
 @import './assets/styles/components/index.scss';
 @import './assets/styles/pages/index.scss';
 
-
 .container{
   background-color: #F4F4F4;
+  min-width:1366px;
 }
 </style>
 

@@ -16,7 +16,6 @@ var port = process.env.PORT || config.dev.port
 var proxyTable = config.dev.proxyTable
 
 var fs = require("fs");
-
 var app = express()
 var compiler = webpack(webpackConfig)
 
@@ -60,6 +59,34 @@ app.use(hotMiddleware)
 var staticPath = path.posix.join(config.dev.assetsPublicPath, config.dev.assetsSubDirectory)
 app.use(staticPath, express.static('./static'))
 
+app.get("/keyword/loadTitle",function(req,res){
+    var temp = JSON.parse(fs.readFileSync("./json/evolve_title.json"));
+    res.json(temp);
+});
+
+app.post("/keyword/turnKeyword",function(req,res){
+    var temp = JSON.parse(fs.readFileSync("./json/yansheng.json"));
+    res.json(temp);
+});
+
+app.post("/keyword/saveKeyword",function(req,res){
+    res.json({flag:true});
+})
+
+app.get("/sampleKeyword/list",function(req,res){
+    var temp = JSON.parse(fs.readFileSync("./json/evolve_hitrate.json"));
+    res.json(temp);
+});
+
+app.get("/keyword/loadKeyword",function(req,res){
+    var temp = JSON.parse(fs.readFileSync("./json/daoru.json"));
+    res.json(temp);
+});
+
+app.get("/keyword/loadBaseword",function(req,res){
+    var temp = JSON.parse(fs.readFileSync("./json/diwei.json"));
+    res.json(temp);
+});
 
 app.get("/sysmgr/dict/query",function(req,res){
   var data;
