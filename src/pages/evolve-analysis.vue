@@ -7,7 +7,7 @@
       <div class="form-list">
           <table class="my-table">
                 <thead>
-                  <tr><th>序号</th><th>关键词</th><th>敏感度</th><th>搜索量</th><th>命中数</th><th>命中率</th><th>热度趋势</th><th>时间</th><th>相关事件</th></tr>
+                  <tr><th>序号</th><th>关键词</th><th>敏感度</th><th>搜索量</th><th>命中数</th><th>命中率</th><th>热度趋势</th><th>时间</th></tr>
                 </thead>
                 <tbody>
                     <tr v-for="word in transformedWordList">
@@ -19,7 +19,6 @@
                         <td>{{word.hitRate}}</td>
                         <td>{{word.trend}}</td>
                         <td>{{word.date}}</td>
-                        <td>{{word.event}}</td>
                     </tr>
                 </tbody>
 
@@ -77,13 +76,13 @@ export default {
   },		
 
   mounted:function(){
-		console.log(this.transformedWordList);
+
   }
 }
 
 function loadData(vm,o){
 	//vm.$http.get('keyword/hitRate',
-    vm.$http.get('sampleKeyword/list',
+    vm.$http.get('keyword/list',
         {
             params:{
                 topicId: vm.id,
@@ -99,7 +98,10 @@ function loadData(vm,o){
 		vm.totalSize = response.body["totalSize"];
 		for(var obj in vm.transformedWordList){
 			var temp = vm.transformedWordList[obj];
-			temp.hitRate = Math.round(parseFloat(temp.hitRate)*10000)/100 + "%";
+            if(temp.hitRate && temp.date)
+			    temp.hitRate = Math.round(parseFloat(temp.hitRate)*10000)/100 + "%";
+                var date = new Date(parseInt(temp.date));
+                temp.date =  (date.getFullYear()) + "-" +(date.getMonth()+1) + "-" + (date.getDate());
 		}
 		if(vm.transformedWordList.length != 0)
 				vm.paginationFlag = true;
