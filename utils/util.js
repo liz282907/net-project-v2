@@ -25,5 +25,19 @@ function isObjectValueEqual(a, b) {
 
     return true;
 }
+function format(time,fmt){
+  let dateObj = new Date(parseInt(time));
+  var o = {
+        "M+": dateObj.getMonth() + 1, //月份
+        "d+": dateObj.getDate(), //日
+        "h+": dateObj.getHours(), //小时
+        "m+": dateObj.getMinutes(), //分
+        "s+": dateObj.getSeconds(), //秒
+    };
+    if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (dateObj.getFullYear() + "").substr(4 - RegExp.$1.length));
+    for (let k in o)
+    if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+    return fmt;
+}
 
-export {removeByValue, isObjectValueEqual};
+export {removeByValue, isObjectValueEqual,format};

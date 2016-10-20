@@ -79,7 +79,9 @@
                     </div>
 
                 </el-table-column>
-                <el-table-column property="entryTime" label="录入时间" sortable></el-table-column>
+                <el-table-column inline-template label="录入时间" sortable>
+                    <span>{{ row.entryTime}}</span>
+                </el-table-column>
                 <el-table-column property="assessTime" label="审核时间" sortable></el-table-column>
                 <el-table-column property="source" label="来源" ></el-table-column>
                 <el-table-column  inline-template label="分类" >
@@ -164,20 +166,10 @@
 <script>
 // import {topics} from '../../utils/mock.js';
 import { urls, statusDict } from '../../utils/constants.js';
-
+import { format } from '../../utils/util.js';
 
 let timer;
 
-// const defaultQueries = {
-//         userid: 1,
-//         pageSize:50,
-//         pageIndex:1,
-//         topic: "习近平",
-//         filterContent: 1,
-//         filterCategory: 1,
-//         filterSelect: "keyword",
-//         filterInput:""
-//     }
 
 export default {
   components: {
@@ -359,10 +351,19 @@ export default {
             this.fullscreenLoading = false;
             // ({totalSize : this.totalSize,keywordList : this.keywordList} = response.body);
             this.totalSize = response.body.totalSize;
-            this.keywordList = response.body.keywordList;
+
+            this.keywordList = response.body.keywordList.map(row=>{
+                let parsedObj = {entryTime: row.entryTime,assessTime: row.assessTime};
+                if(row.entryTime)
+                     parsedObj.entryTime = format(row.entryTime,"yyyy-MM-dd hh:mm");
+                if(row.assessTime)
+                     parsedObj.assessTime = format(row.entryTime,"yyyy-MM-dd hh:mm");
+                return Object.assign({},row,parsedObj);
+            });
+
             //维护keywordList是否在编辑状态
             this.isEditingArr = new Array(this.keywordList.length).fill(false);
-            console.log("keywordList",this.keywordList);
+
         }, (err)=>{
             console.log("error in keywordList",err);
             this.fullscreenLoading = false;
@@ -496,12 +497,14 @@ export default {
     },
 
     deleteKeyword(index){
-        this.keywordList.splice(index,1);
+
         this.$http.post(urls.delete,{
             keyword: this.keywordList[index].keyword,
             userId: this.curUserId
         }).then(response=>this.showMessage("删除成功","success"),
                 err=>this.showMessage("删除失败","error"));
+
+        this.keywordList.splice(index,1);
     },
 
     editKeyword(index){
