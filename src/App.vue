@@ -4,9 +4,9 @@
 @import './assets/styles/components/index.scss';
 @import './assets/styles/pages/index.scss';
 
-
 .container{
   background-color: #F4F4F4;
+  min-width:1366px;
 }
 </style>
 
@@ -35,21 +35,22 @@ export default {
   },
   data(){
     return {
-      subjects:[],
-      categories:[],
+      // subjects:[],
+      // categories:[],
       // fullscreenLoading: false
     }
   },
+  /*
   created(){
     //fetch subject and category
     console.log("---------app.vue created------------");
     let topicPromise = this.$http.get(urls.topic,{params: {type: 0}})
         .then(response=>{
-          this.subjects = response.body;
+          this.subjects = response.body.subjectList;
         });
     let categoryPromise = this.$http.get(urls.category,{params: {type: 1}})
         .then(response=>{
-          this.categories = response.body;
+          this.categories = response.body.categoryList;
         });
     Promise.all([topicPromise,categoryPromise]).then(response=> {
         console.log("app.vue获取数据成功");
@@ -59,6 +60,7 @@ export default {
 
         });
   },
+  */
   beforeMount(){
     console.log("---------app.vue beforeMount------------");
   },

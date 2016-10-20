@@ -8,14 +8,14 @@ const navList = [
 
 const serverPath = '';
 const urls = {
-    'category': serverPath + '/subject',
-    'topic': serverPath + '/subject',
-    'keywordList': serverPath + '/management/keywordList',
-    'audit': serverPath + '/management/audit',
-    'delete': serverPath + '/management/delete',
-    'update': serverPath + '/management/update',
-    'upload': serverPath + '/upload',
-    'typein': serverPath + '/typein',
+    'category': serverPath + '/sysmgr/dict/query',
+    'topic': serverPath + '/sysmgr/dict/query',
+    'keywordList': serverPath + '/sample/list',
+    'audit': serverPath + '/sample/audit',
+    'delete': serverPath + '/sample/delete',
+    'update': serverPath + '/sample/update',
+    'upload': serverPath + '/sample/upload',
+    // 'typein': serverPath + '/typein',
 };
 const auditStates = [
     {zh_name: '全部', id: -1},

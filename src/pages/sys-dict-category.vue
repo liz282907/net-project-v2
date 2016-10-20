@@ -3,7 +3,7 @@
     <div class="">
         <el-card class="box-card" style="height: 800px;">
 
-            <el-button-group style="display: block;margin: 5px 0;">
+            <el-button-group style="display: block;margin-bottom: 10px;">
                 <el-button type="primary" icon="plus" @click.native="categoryAdd"></el-button>
                 <el-button type="danger" icon="delete" @click.native="categoryDeleteAll" :disabled="!deleteAll"></el-button>
             </el-button-group>
@@ -152,7 +152,7 @@ export default {
         fetchServerData() {
             this.accountList = [];
             this.fetchData(function(response) {
-                this.categoryList = response.data.subjectList;
+                this.categoryList = response.data.categoryList;
                 this.totalSize = response.data.totalSize;
             })
         },

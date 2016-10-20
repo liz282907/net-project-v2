@@ -5,7 +5,7 @@
         "entryTime": "2016-07-24 19:23",
         "assessTime": "2016-07-29 19:33",
         "source": "张三",
-        "category": [4,3],
+        "categories": [4,3],
         "status": 1
     },
     {
@@ -13,7 +13,7 @@
         "entryTime": "2016-07-12 19:23",
         "assessTime": "2016-07-14 19:33",
         "source": "张三",
-        "category": [2],
+        "categories": [2],
         "status": 2
     },
     {
@@ -21,7 +21,7 @@
         "entryTime": "2016-09-04 08:23",
         "assessTime": "",
         "source": "张三",
-        "category": [],
+        "categories": [],
         "status": 0
     },
     {
@@ -29,7 +29,7 @@
         "entryTime": "2016-09-14 19:23",
         "assessTime": "2016-09-22 19:33",
         "source": "张三",
-        "category": [4,2],
+        "categories": [4,2],
         "status": 1
     },
     {
@@ -37,7 +37,7 @@
         "entryTime": "2016-08-14 19:23",
         "assessTime": "2016-09-20 15:33",
         "source": "张三",
-        "category": [2],
+        "categories": [2],
         "status": -1
     }
     ],
