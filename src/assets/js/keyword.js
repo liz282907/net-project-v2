@@ -410,7 +410,7 @@ var keyword = function(option){
 							id:_id
 						},
 						success:function(d){
-							textareaList[i].val(textareaList[i].val()+d.wordList.join(" ")+" ");
+							textareaList[i].val(textareaList[i].val()+d.join(" ")+" ");
 						},
 						error:function(){
 							alert("导入数据错误");
@@ -457,6 +457,8 @@ var keyword = function(option){
 						keyword:oldKeyword
 					}),
 					success:function(d){
+						if(typeof(d) == "string")
+							d = JSON.parse(d);
 						textareaChanged.val(d.join(" "));
 					},
 					error:function(){
