@@ -459,7 +459,7 @@ var keyword = function(option){
 					success:function(d){
 						if(typeof(d) == "string")
 							d = JSON.parse(d);
-						textareaChanged.val(d.join(" "));
+						textareaChanged.val(textareaChanged.val() + d.join(" "));
 					},
 					error:function(){
 						alert("生成衍生词错误");
