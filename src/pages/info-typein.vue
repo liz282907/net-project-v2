@@ -78,6 +78,7 @@ export default {
         // topics: this.$parent.subjects,
         // categories: this.$parent.categories,
         userChoice:{
+            userId: this.$parent.curUser.userId,
             chosenCategories: [],
             chosenTopic: -1
         },

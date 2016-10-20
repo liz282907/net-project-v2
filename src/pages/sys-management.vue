@@ -47,6 +47,9 @@ export default {
             console.log("indexPath",indexPath);
         }
     },
+    created(){
+
+    },
     mounted() {
 
     }

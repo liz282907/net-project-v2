@@ -27,9 +27,24 @@ Vue.use(VueRouter);
 Vue.use(Element);
 Vue.use(VueResource);
 
+const testUser = {
+            userId : 4,
+            name : "张三",
+            auth : 0
+        }
+
+// localStorage.setItem("wxb_user",JSON.stringify(testUser));
+
 const router = new VueRouter({
   mode: 'hash', /* default */
   routes: configRouter,
+  beforeEach: (to,from,next)=>{
+    const user = localStorage.getItem("wxb_user");
+    if(!user){
+        console.log("要跳转");
+        next("/login");
+    }
+  }
 });
 
 /* eslint-disable no-new */

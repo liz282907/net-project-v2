@@ -12,11 +12,23 @@
 
 <template>
   <div >
-      <main-header></main-header>
-      <main class="container">
-          <router-view></router-view>
+          <main-header :cur-user="curUser" v-on:log-out="handleLogout"></main-header>
+          <main class="container">
+              <router-view></router-view>
+          </main>
+          <main-footer></main-footer>
+  <!--
+      <div v-if="isLogined">
+          <main-header :cur-user="curUser"></main-header>
+          <main class="container">
+              <router-view></router-view>
+          </main>
+          <main-footer></main-footer>
+      </div>
+      <main v-else class="container">
+          <my-login></my-login>
       </main>
-      <main-footer></main-footer>
+      -->
   </div>
 
 
@@ -25,6 +37,7 @@
 <script>
 import MainHeader from './components/main-header/main-header';
 import MainFooter from './components/main-footer/main-footer';
+import MyLogin from './pages/login';
 
 import { urls } from '../utils/constants';
 
@@ -32,40 +45,40 @@ export default {
   components: {
     'main-header': MainHeader,
     'main-footer': MainFooter,
+    'my-login': MyLogin
   },
   data(){
+    const user = localStorage.getItem("wxb_user");
     return {
-      // subjects:[],
-      // categories:[],
-      // fullscreenLoading: false
+      curUser: (user? user:null)
+      // isLogined: localStorage.getItem("user")?true:false,
     }
   },
-  /*
-  created(){
-    //fetch subject and category
-    console.log("---------app.vue created------------");
-    let topicPromise = this.$http.get(urls.topic,{params: {type: 0}})
-        .then(response=>{
-          this.subjects = response.body.subjectList;
-        });
-    let categoryPromise = this.$http.get(urls.category,{params: {type: 1}})
-        .then(response=>{
-          this.categories = response.body.categoryList;
-        });
-    Promise.all([topicPromise,categoryPromise]).then(response=> {
-        console.log("app.vue获取数据成功");
-      })
-        .catch(err=>{
-          console.log("获取数据失败");
+  computed:{
+    isLogined(){
+      console.log("--localStorage--",localStorage.getItem("wxb_user"));
+      return this.curUser?true:false;
+    }
+  },
 
-        });
-  },
-  */
-  beforeMount(){
-    console.log("---------app.vue beforeMount------------");
-  },
-  mounted(){
-    console.log("---------app.vue mount------------");
+  methods:{
+    handleLogout(){
+      // debugger;
+      localStorage.removeItem("wxb_user");
+      this.curUser = null;
+      const prevHref = location.href;
+      const curHash = location.hash.match(/(\w+)/)[1];
+      let curHref = prevHref.replace(curHash,'login');
+      // window.location.href.replace(curHref);
+      window.location.href = curHref ;
+      // window.location.hash.replace('login');
+
+
+      this.$message({
+        message: '您已退出',
+        type: 'info'
+      });
+    }
   }
 };
 </script>

@@ -5,6 +5,11 @@ const route = [
         name: '信息录入',
         component: require('./pages/info-typein.vue'),
 	},
+  {
+        path: '/login',
+        name: '登录',
+        component: require('./pages/login.vue'),
+  },
 	{
         path: '/management',
         name: '关键词管理',
@@ -31,6 +36,13 @@ const sysManageRoute = {
     path: '/sys-management',
     name: '系统管理',
     component: require('./pages/sys-management.vue'),
+    beforeEnter:(to, from, next) => {
+        const user = localStorage.getItem("user");
+        if(user && JSON.parse(user).auth===0)
+          next();
+        else
+          next("/login");
+    },
     children: [
     	{ path: 'account', name: '账户管理', component: require('./pages/sys-account.vue') },
     	// { path: '/dict', name: '字典管理', component: require('./pages/sys-dict.vue') },
@@ -45,6 +57,6 @@ totalRoute.route = [...totalRoute.route,evolveRoute, sysManageRoute];
 
 
 // homePage
-totalRoute.route.push({path: '*', redirect: '/evolve'});
+totalRoute.route.push({path: '*', redirect: '/login'});
 
 export default totalRoute.route;

@@ -3,11 +3,12 @@ const navList = [
     { url: '/management', zh_name: '关键词管理' },
     { url: '/evolve', zh_name: '关键词演化' },
     { url: '/analysis', zh_name: '统计分析' },
-    { url: '/sys-management', zh_name: '系统管理' },
+    // { url: '/sys-management', zh_name: '系统管理' },
 ];
 
 const serverPath = '';
 const urls = {
+    'root': serverPath+"/",
     'category': serverPath + '/sysmgr/dict/query',
     'topic': serverPath + '/sysmgr/dict/query',
     'keywordList': serverPath + '/sample/list',
@@ -15,6 +16,7 @@ const urls = {
     'delete': serverPath + '/sample/delete',
     'update': serverPath + '/sample/update',
     'upload': serverPath + '/sample/upload',
+    'login': serverPath + '/login/in',
     // 'typein': serverPath + '/typein',
 };
 const auditStates = [
