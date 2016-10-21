@@ -45,9 +45,10 @@
                 width="100">
             </el-table-column>
             <el-table-column
-                property="register_time"
+                inline-template
                 label="注册时间"
-                width="130">
+                width="150">
+                <div>{{ row.registerTime }}</div>
             </el-table-column>
             <el-table-column
                 property="org_type"
@@ -130,6 +131,7 @@
 </template>
 
 <script>
+import { format } from '../../utils/util.js';
 
 var timer = null;
 
@@ -211,7 +213,12 @@ export default {
             this.fetchData(function(response) {
                 // console.log(response)
                 // this.accountList = response.json().accountList;
-                this.accountList = response.data.accountList;
+                this.accountList = response.data.accountList.map(row=>{
+                    let parsedObj = {registerTime: row.register_time};
+                    if(row.register_time)
+                        parsedObj.registerTime = format(row.register_time,"yyyy-MM-dd hh:mm");
+                    return Object.assign({},row,parsedObj);
+                })
                 this.totalSize = response.data.totalSize;
 
             })

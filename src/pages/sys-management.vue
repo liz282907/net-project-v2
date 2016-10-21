@@ -3,7 +3,7 @@
     <div class="sys-container">
         <aside class="sys-aside">
             <el-menu default-active="/app/sys-management/account" :router="true" theme="dark">
-              <el-menu-item index="/app/sys-management/account">
+              <el-menu-item index="/app/sys-management/account" id="accountItem">
                 账号管理
              </el-menu-item>
               <!-- <el-submenu index="2">
@@ -33,7 +33,7 @@
 </template>
 
 <script>
-
+import $ from "jquery"
 export default {
     components: {
     },
@@ -51,7 +51,7 @@ export default {
 
     },
     mounted() {
-
+        $("#accountItem").click()
     }
 };
 </script>

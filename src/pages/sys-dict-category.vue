@@ -3,7 +3,7 @@
     <div class="">
         <el-card class="box-card" style="height: 800px;">
 
-            <el-button-group style="display: block;margin: 5px 0;">
+            <el-button-group style="display: block;margin-bottom: 10px;">
                 <el-button type="primary" icon="plus" @click.native="categoryAdd"></el-button>
                 <el-button type="danger" icon="delete" @click.native="categoryDeleteAll" :disabled="!deleteAll"></el-button>
             </el-button-group>
@@ -118,9 +118,9 @@ export default {
                 that.fetchServerData()
             }, 500)
         },
-        theme_select: function() {
-            this.fetchServerData()
-        },
+        // theme_select: function() {
+        //     this.fetchServerData()
+        // },
         ids: function(val) {
             this.deleteAll = val.length>1
         },
@@ -152,7 +152,7 @@ export default {
         fetchServerData() {
             this.accountList = [];
             this.fetchData(function(response) {
-                this.categoryList = response.data.themeList;
+                this.categoryList = response.data.categoryList;
                 this.totalSize = response.data.totalSize;
             })
         },
@@ -165,7 +165,7 @@ export default {
                 }
             })
             .then((response) => {
-                this.themeList = response.data.themeList;
+                this.themeList = response.data.subjectList;
                 this.fetchServerData()
             }, (response) => {
 
