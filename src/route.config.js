@@ -44,7 +44,7 @@ let route = [
                   name: '系统管理',
                   component: require('./pages/sys-management.vue'),
                   beforeEnter:(to, from, next) => {
-                      const user = localStorage.getItem("user");
+                      const user = localStorage.getItem("wxb_user");
                       if(user && JSON.parse(user).auth===0)
                         next();
                       else
