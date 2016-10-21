@@ -47,23 +47,28 @@ export default {
       login(){
         this.$http.post(urls.login,this.user).then(response=>{
           let status = response.body.code;
-          if(status!==-1){
+          if(status===0){
               this.errMsg = "";
-              localStorage.setItem("user",JSON.stringify(response.body));
+              // localStorage.setItem("user",JSON.stringify(response.body));
+              // console.log(response.body,typeof response.body);
+              localStorage.setItem("wxb_user",JSON.stringify(response.body));
 
-              router.replace("/management");
+              router.replace("/app");
 
           }else{
               this.errMsg = "用户名或密码错误，请重试";
-              localStorage.removeItem("user");
+              localStorage.removeItem("wxb_user");
           }
         },err=>{
             console.log(err);
         })
       },
     },
+    created(){
+      this.$emit("header-hide");
+    },
     mounted() {
-
+      this.$emit("header-hide");
     }
 };
 </script>

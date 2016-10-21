@@ -71,12 +71,7 @@ app.post("/keyword/turnKeyword",function(req,res){
 
 app.post("/login/in",function(req,res){
 
-        var testUser = {
-            userId : 4,
-            name : "张三",
-            auth : 0
-        }
-    var temp = JSON.stringify(testUser);
+    var temp = JSON.parse(fs.readFileSync("./mock/user.json"));
     res.json(temp);
 });
 

@@ -1,12 +1,12 @@
 <template>
-  <div class="header-wrapper clearfix" v-if="isLogined">
+  <div class="header-wrapper clearfix">
       <h1 class="logo">关键词</h1>
       <ul class="nav clearfix">
         <li v-for="item in navList" class="nav-item">
             <router-link :to="item.url">{{item.zh_name}}</router-link>
         </li>
-        <li class="nav-item" v-if="curUser && JSON.parse(curUser).auth===0">
-            <router-link to="/sys-management">系统管理</router-link>
+        <li class="nav-item" v-if="curUser && curUser.auth===0">
+            <router-link to="/app/sys-management">系统管理</router-link>
         </li>
 
       </ul>
@@ -42,16 +42,18 @@ export default {
 
       navList,
       // curUser: "luchen"
-      curUserName: this.curUser? JSON.parse(this.curUser).name:""
+
     };
   },
 
+
   computed:{
 
-    // curUserName(){
+    curUserName(){
 
-    //   return this.curUser? JSON.parse(this.curUser).name:"";
-    // },
+      return this.curUser? this.curUser.name:"";
+      // return this.$parent.curUser? this.$parent.curUser.name:"";
+    },
 
     isLogined(){
       return this.curUser?true: false;
@@ -66,11 +68,20 @@ export default {
     // }
   },
 
+  created(){
+
+    // this.$on("header-hide",this.hideHeader);
+  },
+  mounted(){
+    console.log("header",this.curUser);
+  },
+
+
   methods:{
     logOut(){
       this.curUserName = "";
       this.$emit("log-out");
-    }
+    },
   }
 };
 </script>

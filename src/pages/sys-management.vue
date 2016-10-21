@@ -2,8 +2,8 @@
 
     <div class="sys-container">
         <aside class="sys-aside">
-            <el-menu default-active="/sys-management/account" :router="true" theme="dark">
-              <el-menu-item index="/sys-management/account">
+            <el-menu default-active="/app/sys-management/account" :router="true" theme="dark">
+              <el-menu-item index="/app/sys-management/account">
                 账号管理
              </el-menu-item>
               <!-- <el-submenu index="2">
@@ -15,13 +15,13 @@
                     分类
                   </el-menu-item>
               </el-submenu> -->
-              <el-menu-item index="/sys-management/dict-theme">
+              <el-menu-item index="/app/sys-management/dict-theme">
                 主题管理
               </el-menu-item>
-              <el-menu-item index="/sys-management/dict-category">
+              <el-menu-item index="/app/sys-management/dict-category">
                 分类管理
               </el-menu-item>
-              <el-menu-item index="/sys-management/system">
+              <el-menu-item index="/app/sys-management/system">
                 分发系统
               </el-menu-item>
             </el-menu>

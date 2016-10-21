@@ -96,7 +96,7 @@
                 </el-table-column>
                 <el-table-column inline-template label="操作">
                     <div>
-                        <div v-show="true">
+                        <div>
                             <div v-if="isAdmin && row.status===0" class="buttongroup-wrapper">
                                 <el-button-group class="action-group">
                                   <el-button type="primary" icon="edit" @click.native="editKeyword($index)" size="mini"></el-button>
@@ -109,8 +109,8 @@
                             </div>
                             <div v-if="!isAdmin && row.status===0" class="buttongroup-wrapper">
                                 <el-button-group>
-                                  <el-button type="primary" icon="edit" size="mini"></el-button>
-                                  <el-button type="primary" icon="delete" size="mini"></el-button>
+                                  <el-button type="primary" icon="edit" size="mini" @click.native="editKeyword($index)"></el-button>
+                                  <el-button type="primary" icon="delete" size="mini" @click.native="deleteKeyword($index)"></el-button>
                                 </el-button-group>
                             </div>
                         </div>
@@ -249,13 +249,13 @@ export default {
 
         isAdmin(){
             const user = this.$parent.curUser;
-            return user && JSON.parse(user).auth ===0;
+            return user && user.auth ===0;
         },
 
         curUserId(){
             // return
             const user = this.$parent.curUser;
-            return user && JSON.parse(user).userId;
+            return user && user.userId;
         },
 
         canBeMounted(){
