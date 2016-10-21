@@ -8,7 +8,7 @@ const navList = [
 
 const serverPath = '';
 const urls = {
-    'root': serverPath+"/",
+    'root': serverPath+"",
     'category': serverPath + '/sysmgr/dict/query',
     'topic': serverPath + '/sysmgr/dict/query',
     'keywordList': serverPath + '/sample/list',

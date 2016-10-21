@@ -176,12 +176,11 @@ export default {
   },
 
   created(){
-    //fetch subject and category
-    // !isEditingArr[$index]
   },
 
   beforeMount(){
     console.log("management will mount");
+    // console.log("------",)
 
   },
   mounted(){

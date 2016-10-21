@@ -40,6 +40,8 @@ import MainFooter from './components/main-footer/main-footer';
 import MyLogin from './pages/login';
 
 import { urls } from '../utils/constants';
+// import { router } from './main';
+
 
 export default {
   components: {
@@ -66,12 +68,13 @@ export default {
       // debugger;
       localStorage.removeItem("wxb_user");
       this.curUser = null;
+
+      // router.push("/login");
+
       const prevHref = location.href;
       const curHash = location.hash.match(/(\w+)/)[1];
       let curHref = prevHref.replace(curHash,'login');
-      // window.location.href.replace(curHref);
       window.location.href = curHref ;
-      // window.location.hash.replace('login');
 
 
       this.$message({

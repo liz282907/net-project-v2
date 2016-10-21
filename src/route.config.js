@@ -1,4 +1,8 @@
 /* eslint-disable global-require*/
+import VueRouter from 'vue-router';
+import Vue from 'vue';
+
+Vue.use(VueRouter);
 const route = [
 	{
         path: '/info-typein',
@@ -59,4 +63,18 @@ totalRoute.route = [...totalRoute.route,evolveRoute, sysManageRoute];
 // homePage
 totalRoute.route.push({path: '*', redirect: '/login'});
 
-export default totalRoute.route;
+
+const router = new VueRouter({
+  mode: 'hash', /* default */
+  routes: totalRoute.route,
+  beforeEach: (to,from,next)=>{
+    const user = localStorage.getItem("wxb_user");
+    if(!user){
+        console.log("要跳转");
+        next("/login");
+    }
+  }
+});
+
+export default router;
+// export default totalRoute.route;

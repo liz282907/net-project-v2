@@ -69,6 +69,18 @@ app.post("/keyword/turnKeyword",function(req,res){
     res.json(temp);
 });
 
+app.post("/login/in",function(req,res){
+
+        var testUser = {
+            userId : 4,
+            name : "张三",
+            auth : 0
+        }
+    var temp = JSON.stringify(testUser);
+    res.json(temp);
+});
+
+
 app.post("/keyword/saveKeyword",function(req,res){
     res.json({flag:true});
 })

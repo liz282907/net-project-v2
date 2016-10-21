@@ -13,11 +13,11 @@
         <el-alert :title="errMsg" type="error" style="height:40px" v-if="errMsg"></el-alert>
         <div class="input-div">
                 <span class="icon">♙</span>
-                <input id="login_user" type="text" autocomplete="off" name="username" :value="user.name"></input>
+                <input id="login_user" type="text" autocomplete="off" name="username" v-model="user.name"></input>
             </div>
             <div class="input-div">
                 <span class="icon">♖</span>
-                <input id="login_key" type="text" autocomplete="off" name="password" :value="user.password"></input>
+                <input id="login_key" type="password" autocomplete="off" name="password" v-model="user.password"></input>
             </div>
         <button class="button" @click="login">登录</button>
     </div>
@@ -29,6 +29,8 @@
 
 <script>
 import { urls } from '../../utils/constants.js';
+import { replaceHash } from '../../utils/util';
+import  router  from '../route.config';
 
 export default {
     name: "my-login",
@@ -48,13 +50,9 @@ export default {
           if(status!==-1){
               this.errMsg = "";
               localStorage.setItem("user",JSON.stringify(response.body));
-              /*
-              for(let [key,value] of Object.entries(response.body)){
-                localStorage.setItem(key,value);
-              }
-              */
-              //redirect
-              window.location.href.replace(urls.root);
+
+              router.replace("/management");
+
           }else{
               this.errMsg = "用户名或密码错误，请重试";
               localStorage.removeItem("user");
