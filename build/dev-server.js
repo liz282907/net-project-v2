@@ -69,6 +69,13 @@ app.post("/keyword/turnKeyword",function(req,res){
     res.json(temp);
 });
 
+app.post("/login/in",function(req,res){
+
+    var temp = JSON.parse(fs.readFileSync("./mock/user.json"));
+    res.json(temp);
+});
+
+
 app.post("/keyword/saveKeyword",function(req,res){
     res.json({flag:true});
 })

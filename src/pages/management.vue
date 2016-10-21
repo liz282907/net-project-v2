@@ -49,7 +49,7 @@
         </div>
         <div class="table-part clearfix">
             <!-- 按钮组和多选反选 -->
-            <div class="table-actions">
+            <div class="table-actions" v-if="isAdmin">
                 <!-- <el-checkbox class="checkbox mycheckbox" v-model="chooseAll">全选</el-checkbox> -->
                 <el-checkbox class="checkbox mycheckbox" @change='chooseOtherKeywords'>反选</el-checkbox>
                 <el-button-group class="action-group">
@@ -96,7 +96,7 @@
                 </el-table-column>
                 <el-table-column inline-template label="操作">
                     <div>
-                        <div v-show="true">
+                        <div>
                             <div v-if="isAdmin && row.status===0" class="buttongroup-wrapper">
                                 <el-button-group class="action-group">
                                   <el-button type="primary" icon="edit" @click.native="editKeyword($index)" size="mini"></el-button>
@@ -109,8 +109,8 @@
                             </div>
                             <div v-if="!isAdmin && row.status===0" class="buttongroup-wrapper">
                                 <el-button-group>
-                                  <el-button type="primary" icon="edit" size="mini"></el-button>
-                                  <el-button type="primary" icon="delete" size="mini"></el-button>
+                                  <el-button type="primary" icon="edit" size="mini" @click.native="editKeyword($index)"></el-button>
+                                  <el-button type="primary" icon="delete" size="mini" @click.native="deleteKeyword($index)"></el-button>
                                 </el-button-group>
                             </div>
                         </div>
@@ -176,12 +176,11 @@ export default {
   },
 
   created(){
-    //fetch subject and category
-    // !isEditingArr[$index]
   },
 
   beforeMount(){
     console.log("management will mount");
+    // console.log("------",)
 
   },
   mounted(){
@@ -233,12 +232,12 @@ export default {
 
         statusDict,
         keywordList: [] ,
-        isAdmin: true,
         isEditingArr: [],
 
         curPage: 1,
 
         pageSize: 20,
+        totalSize: 1,     //页数
 
         tableSelection:[],
         test: []
@@ -248,16 +247,15 @@ export default {
 
   computed: {
 
-        // topics(){
-        //     return this.$parent.subjects;
-        // },
-
-        // categories(){
-        //     return this.$parent.categories;
-        // },
+        isAdmin(){
+            const user = this.$parent.curUser;
+            return user && user.auth ===0;
+        },
 
         curUserId(){
-            return 1;
+            // return
+            const user = this.$parent.curUser;
+            return user && user.userId;
         },
 
         canBeMounted(){
@@ -266,7 +264,7 @@ export default {
 
         queryObj(){
             return {
-                userId: 1,
+                userId: this.curUserId,
                 pageSize: this.pageSize,
                 pageIndex: this.curPage,
                 subjectId: this.curTopic.id,
@@ -293,7 +291,8 @@ export default {
             }))
         },
         totalCount(){
-            return this.pageSize* this.totalSize;
+            console.log(this.totalSize* this.pageSize);
+            return this.totalSize* this.pageSize;
         }
   },
 
@@ -321,6 +320,10 @@ export default {
 
     handleMultipleSelectionChange(val){
         this.tableSelection = val;
+    },
+
+    change2Login(){
+        window.location.hash = "login";
     },
 
     handleCurrentChange(curPage){
@@ -389,6 +392,7 @@ export default {
             this.showMessage("审核成功","success")
         }).catch(err=>{
             // this.$set(this.keywordList,index,prevRow);
+
             if(cb) cb();
             this.showMessage("审核失败","error")
         })
@@ -501,10 +505,17 @@ export default {
         this.$http.post(urls.delete,{
             keyword: this.keywordList[index].keyword,
             userId: this.curUserId
-        }).then(response=>this.showMessage("删除成功","success"),
-                err=>this.showMessage("删除失败","error"));
+        }).then(response=>{
+            if(response.code && response.code===-2){
+                this.showMessage("您没有权限进行删除","info");
+            }else{
+                this.showMessage("删除成功","success");
+                this.keywordList.splice(index,1);
+            }
+        },
+            err=>this.showMessage("删除失败","error"));
 
-        this.keywordList.splice(index,1);
+
     },
 
     editKeyword(index){
@@ -539,10 +550,14 @@ export default {
             newWord: this.dialog.form.keyword,
             categories: this.dialog.form.categories
         }).then(response=>{
-            this.showMessage("更新成功","success");
 
-            this.updateTableRow(index,'keyword',this.dialog.form.keyword);
-            this.updateTableRow(index,'categories',this.dialog.form.categories);
+            if(response.code && response.code ===-2)
+                this.showMessage("您没有权限进行修改");
+            else{
+                this.showMessage("更新成功","success");
+                this.updateTableRow(index,'keyword',this.dialog.form.keyword);
+                this.updateTableRow(index,'categories',this.dialog.form.categories);
+            }
 
         }).catch(err=>{
             this.showMessage("更新失败","error");

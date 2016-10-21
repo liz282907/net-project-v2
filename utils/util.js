@@ -40,4 +40,21 @@ function format(time,fmt){
     return fmt;
 }
 
-export {removeByValue, isObjectValueEqual,format};
+function replaceHash(destHash){
+    // let prevHash = location.hash;
+
+    // const curHash = prevHash.match(/(\w+)/)[1];
+    // const newHash = prevHash.replace(curHash,destHash);
+    // window.location.hash = newHash ;
+
+    const prevHref = location.href;
+      const curHash = location.hash.match(/(\w+)/)[1];
+      let curHref = prevHref.replace(curHash,destHash);
+      // window.location.href.replace(curHref);
+      window.location.href = curHref ;
+
+
+
+}
+
+export {removeByValue, isObjectValueEqual,format,replaceHash};

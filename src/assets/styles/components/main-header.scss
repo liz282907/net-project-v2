@@ -43,7 +43,7 @@ $base-color: #3F3F3F;
       color: #fff;
     }
 }
-
+//deprecated
 .user-photo{
   position: relative;
   color: $white;
@@ -60,4 +60,9 @@ $base-color: #3F3F3F;
 
   }
 }
-
+.el-dropdown-link{
+    cursor: pointer;
+}
+.username,.el-icon-caret-bottom{
+    color: $white;
+}
