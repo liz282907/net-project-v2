@@ -49,7 +49,7 @@
         </div>
         <div class="table-part clearfix">
             <!-- 按钮组和多选反选 -->
-            <div class="table-actions">
+            <div class="table-actions" v-if="isAdmin">
                 <!-- <el-checkbox class="checkbox mycheckbox" v-model="chooseAll">全选</el-checkbox> -->
                 <el-checkbox class="checkbox mycheckbox" @change='chooseOtherKeywords'>反选</el-checkbox>
                 <el-button-group class="action-group">
