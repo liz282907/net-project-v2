@@ -1,6 +1,6 @@
 <template>
   <div class="upload-wrapper">
-    <input type="file" style="display:none" id="fileInput" ref="fileInput" multiple @change="handleFiles">
+    <input type="file" style="display:none" id="fileInput" ref="fileInput" multiple @change="handleChange">
     <div  @click="clickToChooseFile" for="fileInput">
       <p class="upload-icon"><i class="icon iconfont">&#xe60d;</i></p>
       <p class="upload-text">Click or drag file to this area to upload</p>
@@ -31,6 +31,13 @@ let loadedFileList = [];
 
 export default {
 
+  props: {
+    action:{
+      type : String,
+      required: true
+    },
+    multiple: Boolean
+  },
   data() {
     return {
       // files:[],
@@ -66,19 +73,29 @@ export default {
       this.$refs.fileInput.click();
     },
 
-    handleFiles(e){
+    handleChange(e){
       const files = e.target.files;
       if(!files || files.length<=0) return;
 
+      this.handleFiles(files);
+    },
+
+    handleFiles(files){
+
+      let nextFiles = Array.prototype.slice.call(files);
+      if(!this.multiple) nextFiles = nextFiles.slice(0,1);
 
       /*新载入的文件*/
-      const nextFileObjList = Array.prototype.slice.call(files).filter(file=>{
+      const nextFileObjList = nextFiles.filter(file=>{
         return (loadedFileList.indexOf(file)===-1);
       }).map(file=>{
         return {file,status:'normal',percent:0};
       });
 
-      this.fileObjList = [...this.fileObjList,...nextFileObjList];
+      if(!this.multiple)
+        this.fileObjList = nextFileObjList;
+      else
+        this.fileObjList = [...this.fileObjList,...nextFileObjList];
 
       nextFileObjList.forEach(fileObj=>{
         const fileReader = new FileReader();
@@ -110,8 +127,13 @@ export default {
     },
     removeFile(file){
       const index = getFileIndex(file,this.fileObjList);
-      if(index!==-1)
+      if(index!==-1){
         this.fileObjList.splice(index,1);
+        //预留接口
+        this.$emit('onRemove',file);
+      }
+
+
     }
   }
 };

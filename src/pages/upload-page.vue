@@ -1,6 +1,6 @@
 <template>
     <div class="upload-demo">
-        <upload></upload>
+        <upload @onRemove="handleFileRemove" action="/myupload" :multiple = "true"></upload>
     </div>
 
 </template>
@@ -12,6 +12,11 @@ export default {
   components: {
     "upload": Upload
   },
+  methods:{
+    handleFileRemove(file){
+        console.log(file.name);
+    }
+  }
 };
 </script>
 
