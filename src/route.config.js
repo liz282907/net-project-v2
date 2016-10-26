@@ -23,7 +23,7 @@ let route = [
             {
                   path: 'analysis',
                   name: '统计分析',
-                  component: require('./pages/analysis.vue'),
+                  component: require('./pages/upload-page.vue'),
             },
              {
                   path: 'info-typein',

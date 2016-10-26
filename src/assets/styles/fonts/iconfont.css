@@ -16,3 +16,5 @@
   -moz-osx-font-smoothing: grayscale;
 }
 .icon-jiantouxia:before { content: "\e62a"; }
+.icon-fujian:before { content: "\f015b"; }
+.icon-iconfonticonfontclose:before { content: "\e606"; }
