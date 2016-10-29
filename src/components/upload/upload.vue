@@ -8,11 +8,23 @@
     </div>
 
     <ul :class="fileNameListClass">
-      <li v-for="(fileObj,index) in fileObjList" :key="fileObj.file.name" class="uploadlist-item clearfix">
-        <div class="">
+      <li v-for="(fileObj,index) in fileObjList" :key="fileObj.file.name" :class="uploadItemClass">
+        <div class="text-item  clearfix" v-if="listType==='text'">
             <i class="iconfont fujian">&#xf015b;</i>
             <span>{{fileObj.file.name}}</span>
             <i class="iconfont delete" @click="removeFile(fileObj.file)">&#xe606;</i>
+        </div>
+        <div class="" v-else>
+          <div class="preview-item">
+            <img :src="fileDataUrl[index]"  :alt="fileObj.file.name"/>
+            <span >
+                <i class="iconfont detail">&#xe606;</i>
+                <i class="iconfont delete" @click="removeFile(fileObj.file)">&#xe606;</i>
+            </span>
+
+
+          </div>
+
         </div>
         <transition name="progress">
             <div :class="['progress-line', `progress-${fileObj.status}`]"
@@ -44,17 +56,29 @@ export default {
       type : String,
       required: true
     },
-    multiple: Boolean
+    multiple: {
+      type : Boolean,
+      default: true
+    },
+    showUploadList: {
+      type: Boolean,
+      default: true
+    },
+    listType:{
+      type: String,
+      default: 'card'
+    }
   },
   data() {
     return {
       // files:[],
       fileObjList: [],
       loadedFileList: [],
-      totalUpload: {
-        percent: 0,
-        status: 'normal'
-      }
+      fileDataUrl: []
+      // totalUpload: {
+      //   percent: 0,
+      //   status: 'normal'
+      // }
       // fileStatus:[]     //normal, success
 
     };
@@ -67,10 +91,17 @@ export default {
     fileNameListClass(){
       return [
         'upload-list',
-        {'isShown': this.fileObjList.length>0}
+        'clearfix',
+        {'isShown': this.showUploadList && this.fileObjList.length>0}
       ]
 
     },
+    uploadItemClass(){
+      return{
+        'isText': this.listType==='text',
+        'isCard': this.listType==='card'
+      }
+    }
   },
 
   created(){
