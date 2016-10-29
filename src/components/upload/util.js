@@ -1,6 +1,6 @@
 function getFileIndex(file,fileObjList){
 
-    return fileObjList.length?fileObjList.map(fileObj=>fileObj.file).indexOf(file):-1;
+    return (fileObjList && fileObjList.length)?fileObjList.map(fileObj=>fileObj.file).indexOf(file):-1;
 }
 
 function isFile(obj){

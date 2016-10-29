@@ -149,7 +149,15 @@ app.get("/sysmgr/dict/query", function(req,res){
 app.get("/sysmgr/dict-category/query", function(req,res){
     var categoryList = JSON.parse(fs.readFileSync("./mock/category_yezi.json"));
     res.json(categoryList);
-})
+});
+
+
+app.post("/myupload",function(req,res){
+  res.json({msg: "success"});
+});
+
+
+
 
 module.exports = app.listen(port, function (err) {
   if (err) {

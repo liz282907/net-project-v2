@@ -25,13 +25,13 @@ export default {
         console.log("fileupload success");
     },
     handleFileError(file,err){
-        console.log(file.name);
+        console.log("文件上传失败",file.name,err,err.msg);
     },
     handleFilesSuccess(fileList){
         console.log("全部文件上传成功 success");
     },
-    handleFilesError(fileList){
-        console.log("部分文件上传失败 success");
+    handleFilesError(fileList,err){
+        console.log("部分文件上传失败 error",err);
     },
     onFileUploadProgress(file){
         console.log(file.name);

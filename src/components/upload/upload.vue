@@ -144,40 +144,54 @@ export default {
     },
 
     postFiles(){
+      const that = this;
       let promises = this.fileObjList.map(fileObj=>{
           const curPromise = this.uploadFile(fileObj.file);
           // promises.push(curPromise);
           curPromise.then(responseBody=>{
-            this.$emit("onSuccess",fileObj.file,responseBody);
+
+            that.$emit("onSuccess",fileObj.file,responseBody);
+
           },err=>{
-            this.$emit("onError",fileObj.file,err);
+
+            that.$emit("onError",fileObj.file,err);
+
           });
           return curPromise;
 
       });
-      Promise.all(promises).then(posts=>{
-        this.$emit("onAllSuccess",fileObjList.map(obj=>obj.file));
-      },err=>{
+      Promise.all(promises).then(responseArr=>{
+        this.$emit("onAllSuccess",this.fileObjList.map(obj=>obj.file));
+      }).catch(err=>{
         //断点重传，接口待定义
-        this.$emit("onSomeError",fileObjList.map(obj=>obj.file));
-      })
+        this.$emit("onSomeError",this.fileObjList.map(obj=>obj.file),err);
+      });
 
 
     },
 
+    //返回promise对象。如果beforeload中返回promise对象了，在resolve中继续返回post请求新创建的promise对象。
     uploadFile(file){
-      if(this.beforeUpload){
-        this.beforeUpload(file);
+
+      if(!this.beforeUpload){
+        return this.postFile(file);
       }
       const before = this.beforeUpload(file);
+      //返回promise对象
       if(before && before.then){
         return before.then(processedFile=>{
           if(uploadUtil.isFile(processedFile))
               return this.postFile(processedFile);
 
         })
-      }else if(uploadUtil.isFile(processedFile))
+      }else if(before !== false){
+        //只要非false，就上传
+        if(uploadUtil.isFile(processedFile))
           return this.postFile(processedFile);
+      }
+      //返回false,不上传
+
+
 
     },
 
@@ -190,10 +204,6 @@ export default {
                   onRemove: this.removeFile,
                   onPause: this.handleFilePause,
                   onResume: this.handleFileResume
-                }).then(responseBody=>{
-                  //单个文件成功
-                },err=>{
-                  //单个文件失败
                 });
     },
 
@@ -202,7 +212,7 @@ export default {
       const that = this;
       return function(e){
         // e.percent
-        const index = uploadUtil.getFileIndex(file,this.fileObjList);
+        const index = uploadUtil.getFileIndex(file,that.fileObjList);
         that.fileObjList[index].percent = e.percent+"%";
         if(that.onProgress)
           that.$emit("onProgress",file);

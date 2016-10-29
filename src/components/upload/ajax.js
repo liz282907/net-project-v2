@@ -41,11 +41,25 @@ export default function upload(action,options){
 
 }
 
-function getError(action,ajax){
-    const msg = `${ajax.method + action}操作失败，status:${ajax.statusText}`;
+function getError(action,xhr){
+    const msg = `${xhr.method + action}操作失败，status:${xhr.statusText}`;
     const err = new Error(msg);
     err.url = action;
     return err;
+}
+
+function getResponseBody(xhr){
+    //默认值""
+    const responseBody = xhr.response||xhr.responseText;
+
+    //防止response json解析有误
+    if(!responseBody) return responseBody;
+
+    try{
+        return JSON.parse(responseBody);
+    }catch(err){
+        return responseBody;
+    }
 }
 
 function bindEvent(xhr){
