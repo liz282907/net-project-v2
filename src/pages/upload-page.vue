@@ -3,6 +3,8 @@
         <upload @onRemove="handleFileRemove" action="/myupload"
             @onSuccess= "handleFileSuccess"
             @onError= "handleFileError"
+            @onAllSuccess= "handleFilesSuccess"
+            @onSomeError= "handleFilesError"
             @onProgress= "onFileUploadProgress" :multiple = "true"></upload>
     </div>
 
@@ -19,11 +21,17 @@ export default {
     handleFileRemove(file){
         console.log(file.name);
     },
-    handleFileSuccess(file){
+    handleFileSuccess(file,responseBody){
         console.log("fileupload success");
     },
-    handleFileError(file){
+    handleFileError(file,err){
         console.log(file.name);
+    },
+    handleFilesSuccess(fileList){
+        console.log("全部文件上传成功 success");
+    },
+    handleFilesError(fileList){
+        console.log("部分文件上传失败 success");
     },
     onFileUploadProgress(file){
         console.log(file.name);

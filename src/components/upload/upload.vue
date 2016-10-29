@@ -144,12 +144,23 @@ export default {
     },
 
     postFiles(){
-      // this.fileObjList.map(fileObj=>{
-      //   let promise = new Promise(resolve,reject){
+      let promises = this.fileObjList.map(fileObj=>{
+          const curPromise = this.uploadFile(fileObj.file);
+          // promises.push(curPromise);
+          curPromise.then(responseBody=>{
+            this.$emit("onSuccess",fileObj.file,responseBody);
+          },err=>{
+            this.$emit("onError",fileObj.file,err);
+          });
+          return curPromise;
 
-      //   }
-      //   this.uploadFile(fileObj.file);
-      // });
+      });
+      Promise.all(promises).then(posts=>{
+        this.$emit("onAllSuccess",fileObjList.map(obj=>obj.file));
+      },err=>{
+        //断点重传，接口待定义
+        this.$emit("onSomeError",fileObjList.map(obj=>obj.file));
+      })
 
 
     },
@@ -160,31 +171,30 @@ export default {
       }
       const before = this.beforeUpload(file);
       if(before && before.then){
-        before.then(processedFile=>{
+        return before.then(processedFile=>{
           if(uploadUtil.isFile(processedFile))
-              this.postFile(processedFile);
+              return this.postFile(processedFile);
 
         })
       }else if(uploadUtil.isFile(processedFile))
-              this.postFile(processedFile);
-
-
-      return before;
+          return this.postFile(processedFile);
 
     },
 
     postFile(file){
-        uploadAjax(this.action,{
-            data: this.data,
-            filename: file.name,
-            file: file,
-            onSuccess: ()=>{this.$emit("onSuccess",file)},
-            onError: ()=>{this.$emit("onError",file)},
-            onProgress: this.onFileUploadProgress(file),
-            onRemove: this.removeFile,
-            onPause: this.handleFilePause,
-            onResume: this.handleFileResume
-          });
+        return uploadAjax(this.action,{
+                  data: this.data,
+                  filename: file.name,
+                  file: file,
+                  onProgress: this.onFileUploadProgress(file),
+                  onRemove: this.removeFile,
+                  onPause: this.handleFilePause,
+                  onResume: this.handleFileResume
+                }).then(responseBody=>{
+                  //单个文件成功
+                },err=>{
+                  //单个文件失败
+                });
     },
 
     onFileUploadProgress(file){
