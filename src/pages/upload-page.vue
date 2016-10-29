@@ -1,6 +1,9 @@
 <template>
     <div class="upload-demo">
-        <upload @onRemove="handleFileRemove" action="/myupload" :multiple = "true"></upload>
+        <upload @onRemove="handleFileRemove" action="/myupload"
+            @onSuccess= "handleFileSuccess"
+            @onError= "handleFileError"
+            @onProgress= "onFileUploadProgress" :multiple = "true"></upload>
     </div>
 
 </template>
@@ -14,6 +17,15 @@ export default {
   },
   methods:{
     handleFileRemove(file){
+        console.log(file.name);
+    },
+    handleFileSuccess(file){
+        console.log("fileupload success");
+    },
+    handleFileError(file){
+        console.log(file.name);
+    },
+    onFileUploadProgress(file){
         console.log(file.name);
     }
   }

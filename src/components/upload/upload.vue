@@ -6,6 +6,7 @@
       <p class="upload-text">Click or drag file to this area to upload</p>
       <p class="upload-hint">Support for a single or bulk upload. Strictly prohibit from uploading company data or other band files</p>
     </div>
+
     <ul :class="fileNameListClass">
       <li v-for="(fileObj,index) in fileObjList" :key="fileObj.file.name" class="uploadlist-item clearfix">
         <div class="">
@@ -16,16 +17,23 @@
         <transition name="progress">
             <div :class="['progress-line', `progress-${fileObj.status}`]"
                   :style="{width: fileObj.percent}"
-                  v-if="fileObj.percent!=='100%'"></div>
+                  v-if="fileObj.percent!=='100%' && fileObj.percent !=='0%'"></div>
         </transition>
       </li>
     </ul>
+    <!--
+    <transition name="progress">
+        <div :class="['progress-line', `progress-${totalUpload.status}`]"
+              :style="{width: totalUpload.percent}"
+              v-if="totalUpload.percent!=='100%'"></div>
+    </transition>
+    -->
   </div>
 </template>
 
 <script>
-import { getFileIndex } from './util.js';
-
+import uploadUtil from './util.js';
+import uploadAjax from './ajax.js';
 let loadedFileList = [];
 
 
@@ -41,8 +49,12 @@ export default {
   data() {
     return {
       // files:[],
-      fileObjList:[],
-      loadedFileList:[]
+      fileObjList: [],
+      loadedFileList: [],
+      totalUpload: {
+        percent: 0,
+        status: 'normal'
+      }
       // fileStatus:[]     //normal, success
 
     };
@@ -80,24 +92,13 @@ export default {
       this.handleFiles(files);
     },
 
-    handleFiles(files){
+    handleImagePreview(){
 
-      let nextFiles = Array.prototype.slice.call(files);
-      if(!this.multiple) nextFiles = nextFiles.slice(0,1);
+    },
 
-      /*新载入的文件*/
-      const nextFileObjList = nextFiles.filter(file=>{
-        return (loadedFileList.indexOf(file)===-1);
-      }).map(file=>{
-        return {file,status:'normal',percent:0};
-      });
-
-      if(!this.multiple)
-        this.fileObjList = nextFileObjList;
-      else
-        this.fileObjList = [...this.fileObjList,...nextFileObjList];
-
-      nextFileObjList.forEach(fileObj=>{
+    //到内存的进度条
+    showProgressOfLoadFile(nextFileObjList){
+        nextFileObjList.forEach(fileObj=>{
         const fileReader = new FileReader();
         fileReader.onprogress = updateProgress(fileObj);
         fileReader.onloadend = loadFileEnd(fileObj);
@@ -115,10 +116,91 @@ export default {
             const contents = e.target.result;
           }
         }
+      });
+    },
 
+    handleFiles(files){
 
+      let nextFiles = Array.prototype.slice.call(files);
+      if(!this.multiple) nextFiles = nextFiles.slice(0,1);
+
+      /*新载入的文件*/
+      const nextFileObjList = nextFiles.filter(file=>{
+        return (loadedFileList.indexOf(file)===-1);
+      }).map(file=>{
+        return {file,status:'normal',percent:0};
       });
 
+      if(!this.multiple)
+        this.fileObjList = nextFileObjList;
+      else
+        this.fileObjList = [...this.fileObjList,...nextFileObjList];
+
+      //this.showProgressOfLoadFile(nextFileObjList);
+
+      this.postFiles();
+
+
+    },
+
+    postFiles(){
+      // this.fileObjList.map(fileObj=>{
+      //   let promise = new Promise(resolve,reject){
+
+      //   }
+      //   this.uploadFile(fileObj.file);
+      // });
+
+
+    },
+
+    uploadFile(file){
+      if(this.beforeUpload){
+        this.beforeUpload(file);
+      }
+      const before = this.beforeUpload(file);
+      if(before && before.then){
+        before.then(processedFile=>{
+          if(uploadUtil.isFile(processedFile))
+              this.postFile(processedFile);
+
+        })
+      }else if(uploadUtil.isFile(processedFile))
+              this.postFile(processedFile);
+
+
+      return before;
+
+    },
+
+    postFile(file){
+        uploadAjax(this.action,{
+            data: this.data,
+            filename: file.name,
+            file: file,
+            onSuccess: ()=>{this.$emit("onSuccess",file)},
+            onError: ()=>{this.$emit("onError",file)},
+            onProgress: this.onFileUploadProgress(file),
+            onRemove: this.removeFile,
+            onPause: this.handleFilePause,
+            onResume: this.handleFileResume
+          });
+    },
+
+    onFileUploadProgress(file){
+      //percent loading
+      const that = this;
+      return function(e){
+        // e.percent
+        const index = uploadUtil.getFileIndex(file,this.fileObjList);
+        that.fileObjList[index].percent = e.percent+"%";
+        if(that.onProgress)
+          that.$emit("onProgress",file);
+      }
+
+
+
+      //上传成功变色
 
     },
 
@@ -126,7 +208,7 @@ export default {
 
     },
     removeFile(file){
-      const index = getFileIndex(file,this.fileObjList);
+      const index = uploadUtil.getFileIndex(file,this.fileObjList);
       if(index!==-1){
         this.fileObjList.splice(index,1);
         //预留接口
