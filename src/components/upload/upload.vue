@@ -150,7 +150,6 @@ export default {
       // debugger;
       this.ondrag = true;
       e.preventDefault();
-      //高亮
     },
     handleFileDrop(e){
       e.preventDefault();
@@ -185,7 +184,9 @@ export default {
     },
 
     fileterFilesByType(filelist){
-      return filelist.filter(file=> this.accept.split(",").indexOf(file.type)!==-1);
+      if(this.accept)
+        return filelist.filter(file=> this.accept.split(",").indexOf(file.type)!==-1);
+      else return fileList;
     },
 
     handleFiles(files){
