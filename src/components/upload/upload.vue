@@ -4,7 +4,7 @@
     <div  @click="clickToChooseFile" for="fileInput">
       <p class="upload-icon"><i class="icon iconfont">&#xe6d5;</i></p>
       <p class="upload-text">Click or drag file to this area to upload</p>
-      <p class="upload-hint">Support for a single or bulk upload. Strictly prohibit from uploading company data or other band files</p>
+      <p class="upload-hint">支持单文件/多文件上传，请选择image类型</p>
     </div>
 
     <ul :class="fileNameListClass">
@@ -175,7 +175,7 @@ export default {
           return e=> {
             fileObj.percent = '100%';
             fileObj.status = 'success';
-            loadedFileList.push(fileObj);
+            loadedFileList.push(fileObj.file);
 
             const contents = e.target.result;
           }
@@ -195,31 +195,32 @@ export default {
       if(!this.multiple) nextFiles = nextFiles.slice(0,1);
 
       /*新载入的文件*/
-      const nextFileObjList = this.fileterFilesByType(nextFiles).filter(file=>{
-        return (loadedFileList.indexOf(file)===-1);
-      }).map(file=>{
+      debugger;
+      const nextFileObjList = this.fileterFilesByType(nextFiles).map(file=>{
         return {file,status:'normal',percent:0};
       });
+
 
       if(!this.multiple)
         this.fileObjList = nextFileObjList;
       else
         this.fileObjList = [...this.fileObjList,...nextFileObjList];
 
+
       //this.showProgressOfLoadFile(nextFileObjList);
 
-      this.postFiles();
+      this.postFiles(nextFileObjList);
 
 
     },
 
-    postFiles(){
+    postFiles(nextFileObjList){
       const that = this;
-      let promises = this.fileObjList.map(fileObj=>{
+      let promises = nextFileObjList.map(fileObj=>{
           const curPromise = this.uploadFile(fileObj.file);
           // promises.push(curPromise);
           curPromise.then(responseBody=>{
-
+            this.loadedFileList.push(fileObj.file);
             that.$emit("onSuccess",fileObj.file,responseBody);
 
           },err=>{
@@ -231,10 +232,10 @@ export default {
 
       });
       Promise.all(promises).then(responseArr=>{
-        this.$emit("onAllSuccess",this.fileObjList.map(obj=>obj.file));
+        this.$emit("onAllSuccess",nextFileObjList.map(obj=>obj.file));
       }).catch(err=>{
         //断点重传，接口待定义
-        this.$emit("onSomeError",this.fileObjList.map(obj=>obj.file),err);
+        this.$emit("onSomeError",nextFileObjList.map(obj=>obj.file),err);
       });
 
 

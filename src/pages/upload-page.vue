@@ -1,7 +1,7 @@
 <template>
     <div class="upload-demo">
         <upload @onRemove="handleFileRemove" action="/myupload"
-            accept="image/jpeg"
+            accept="image/jpeg,image/png,image/gif"
             @onSuccess= "handleFileSuccess"
             @onError= "handleFileError"
             @onAllSuccess= "handleFilesSuccess"
