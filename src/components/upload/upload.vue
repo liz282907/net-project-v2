@@ -8,29 +8,37 @@
     </div>
 
     <ul :class="fileNameListClass">
-      <li v-for="(fileObj,index) in fileObjList" :key="fileObj.file.name" :class="uploadItemClass">
-        <div class="text-item  clearfix" v-if="listType==='text'">
+      <li v-for="(fileObj,index) in fileObjList" :key="fileObj.file.name" :class="uploadItemClass" v-if="listType==='text'">
+        <div class="text-item  clearfix" >
             <i class="iconfont fujian">&#xf015b;</i>
             <span>{{fileObj.file.name}}</span>
             <i class="iconfont delete" @click="removeFile(fileObj.file)">&#xe606;</i>
         </div>
-        <div class="" v-else>
-          <div class="preview-item">
-            <img :src="fileDataUrl[index]"  :alt="fileObj.file.name"/>
-            <span >
-                <i class="iconfont detail">&#xe606;</i>
-                <i class="iconfont delete" @click="removeFile(fileObj.file)">&#xe606;</i>
-            </span>
 
-
-          </div>
-
-        </div>
         <transition name="progress">
             <div :class="['progress-line', `progress-${fileObj.status}`]"
                   :style="{width: fileObj.percent}"
                   v-if="fileObj.percent!=='100%' && fileObj.percent !=='0%'"></div>
         </transition>
+      </li>
+      <li  v-if="listType==='card'" v-for="(fileObj,index) in fileObjList" :key="fileObj.file.name"   :class="uploadItemClass">
+          <div class="preview-item">
+            <img ref="previewImg"  :alt="fileObj.file.name"/>
+            <span >
+                <i class="iconfont detail">&#xe606;</i>
+                <i class="iconfont delete" @click="removeFile(fileObj.file)">&#xe606;</i>
+            </span>
+            <div class="card-loading" v-if="fileObj.percent!=='100%' && fileObj.percent !=='0%'">
+              <span>文件上传中</span>
+              <transition name="progress">
+                  <div :class="['progress-line', `progress-${fileObj.status}`]"
+                        :style="{width: fileObj.percent}" ></div>
+              </transition>
+            </div>
+
+
+          </div>
+
       </li>
     </ul>
     <!--
@@ -245,13 +253,20 @@ export default {
         // e.percent
         const index = uploadUtil.getFileIndex(file,that.fileObjList);
         that.fileObjList[index].percent = e.percent+"%";
-        if(that.onProgress)
-          that.$emit("onProgress",file);
-      }
+        that.$emit("onProgress",file);
+
+        if(e.percent===100){
+            const src = URL.createObjectURL(file);
+            const img = that.$refs.previewImg[index];
+            img.src = src;
+            img.onload = e=> URL.revokeObjectURL(src);
+
+        }
 
 
 
       //上传成功变色
+      }
 
     },
 
