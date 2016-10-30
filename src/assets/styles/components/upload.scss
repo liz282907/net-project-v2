@@ -141,7 +141,7 @@ i{color: #999};
     .delete{
         margin-left: 16px;
     }
-    &:hover &:before,&:hover .iconfont{
+    &:hover:before,&:hover .iconfont{
         display: inline-block;
     }
     .card-loading{
