@@ -1,8 +1,8 @@
 <template>
-  <div class="upload-wrapper">
+  <div :class="['upload-wrapper',{'ondrag':ondrag}]" @drop="handleFileDrop" @dragenter="handleFileDragEnter" @dragover="handleFileDragOver">
     <input type="file" style="display:none" id="fileInput" ref="fileInput" multiple @change="handleChange">
     <div  @click="clickToChooseFile" for="fileInput">
-      <p class="upload-icon"><i class="icon iconfont">&#xe60d;</i></p>
+      <p class="upload-icon"><i class="icon iconfont">&#xe6d5;</i></p>
       <p class="upload-text">Click or drag file to this area to upload</p>
       <p class="upload-hint">Support for a single or bulk upload. Strictly prohibit from uploading company data or other band files</p>
     </div>
@@ -25,8 +25,8 @@
           <div class="preview-item">
             <img ref="previewImg"  :alt="fileObj.file.name"/>
             <span >
-                <i class="iconfont detail">&#xe606;</i>
-                <i class="iconfont delete" @click="removeFile(fileObj.file)">&#xe606;</i>
+                <i class="iconfont detail">&#xe785;</i>
+                <i class="iconfont delete" @click="removeFile(fileObj.file)">&#xe618;</i>
             </span>
             <div class="card-loading" v-if="fileObj.percent!=='100%' && fileObj.percent !=='0%'">
               <span>文件上传中</span>
@@ -75,6 +75,9 @@ export default {
     listType:{
       type: String,
       default: 'card'
+    },
+    accept:{
+      type: String
     }
   },
   data() {
@@ -82,7 +85,8 @@ export default {
       // files:[],
       fileObjList: [],
       loadedFileList: [],
-      fileDataUrl: []
+      fileDataUrl: [],
+      ondrag: false,
       // totalUpload: {
       //   percent: 0,
       //   status: 'normal'
@@ -131,9 +135,31 @@ export default {
       this.handleFiles(files);
     },
 
-    handleImagePreview(){
-
+    handleFilePreview(file){
+      const index = uploadUtil.getFileIndex(file,this.fileObjList);
+      const src = URL.createObjectURL(file);
+      const img = this.$refs.previewImg[index];
+      img.src = src;
+      img.onload = e=> URL.revokeObjectURL(src);
     },
+
+    handleFileDragEnter(e){
+      e.preventDefault();
+    },
+    handleFileDragOver(e){
+      // debugger;
+      this.ondrag = true;
+      e.preventDefault();
+      //高亮
+    },
+    handleFileDrop(e){
+      e.preventDefault();
+      this.ondrag = false;
+      const fileList = e.dataTransfer.files;
+      this.handleFiles(fileList);
+    },
+
+
 
     //到内存的进度条
     showProgressOfLoadFile(nextFileObjList){
@@ -158,13 +184,17 @@ export default {
       });
     },
 
+    fileterFilesByType(filelist){
+      return filelist.filter(file=> this.accept.split(",").indexOf(file.type)!==-1);
+    },
+
     handleFiles(files){
 
       let nextFiles = Array.prototype.slice.call(files);
       if(!this.multiple) nextFiles = nextFiles.slice(0,1);
 
       /*新载入的文件*/
-      const nextFileObjList = nextFiles.filter(file=>{
+      const nextFileObjList = this.fileterFilesByType(nextFiles).filter(file=>{
         return (loadedFileList.indexOf(file)===-1);
       }).map(file=>{
         return {file,status:'normal',percent:0};
@@ -255,13 +285,7 @@ export default {
         that.fileObjList[index].percent = e.percent+"%";
         that.$emit("onProgress",file);
 
-        if(e.percent===100){
-            const src = URL.createObjectURL(file);
-            const img = that.$refs.previewImg[index];
-            img.src = src;
-            img.onload = e=> URL.revokeObjectURL(src);
-
-        }
+        if(e.percent===100) that.handleFilePreview(file);
 
 
 
@@ -270,9 +294,6 @@ export default {
 
     },
 
-    validateFileType(){
-
-    },
     removeFile(file){
       const index = uploadUtil.getFileIndex(file,this.fileObjList);
       if(index!==-1){

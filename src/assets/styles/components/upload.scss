@@ -63,6 +63,9 @@ i{color: #999};
         padding: 10px;
     }
 }
+.ondrag{
+    border: 2px dashed $base-blue;
+}
 .isText{
     width: 100%;
     display: block;

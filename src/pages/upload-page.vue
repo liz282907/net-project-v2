@@ -1,6 +1,7 @@
 <template>
     <div class="upload-demo">
         <upload @onRemove="handleFileRemove" action="/myupload"
+            accept="image/jpeg"
             @onSuccess= "handleFileSuccess"
             @onError= "handleFileError"
             @onAllSuccess= "handleFilesSuccess"
@@ -19,7 +20,6 @@ export default {
   },
   methods:{
     handleFileRemove(file){
-        console.log(file.name);
     },
     handleFileSuccess(file,responseBody){
         console.log("fileupload success");
@@ -34,7 +34,6 @@ export default {
         console.log("部分文件上传失败 error",err);
     },
     onFileUploadProgress(file){
-        console.log(file.name);
     }
   }
 };
